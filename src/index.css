@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@source "../index.html";
+@source "./**/*.{js,jsx}";
+
+@theme {
+  --font-sora: 'Sora', system-ui, sans-serif;
+
+  --color-brand-50: #f5f3ff;
+  --color-brand-100: #ede9fe;
+  --color-brand-200: #ddd6fe;
+  --color-brand-300: #c4b5fd;
+  --color-brand-400: #a78bfa;
+  --color-brand-500: #8b5cf6;
+  --color-brand-600: #7c3aed;
+  --color-brand-700: #6d28d9;
+  --color-brand-800: #5b21b6;
+  --color-brand-900: #4c1d95;
+  --color-brand-950: #2e1065;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+body {
+  font-family: var(--font-sora);
+  background-color: #020617;
+  color: #f1f5f9;
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(124, 58, 237, 0.18), transparent 45%),
+    radial-gradient(circle at 85% 90%, rgba(139, 92, 246, 0.12), transparent 40%);
+  background-attachment: fixed;
+}
