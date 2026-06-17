@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [error, setError] = useState('')
   const [showAdd, setShowAdd] = useState(false)
   const [editing, setEditing] = useState(null)
+  const [confirmSignOut, setConfirmSignOut] = useState(false)
 
   useEffect(() => {
     if (!user) return
@@ -163,7 +164,7 @@ export default function Dashboard() {
           <div className="flex items-center gap-3">
             <span className="hidden text-sm text-slate-400 sm:inline">{user?.email}</span>
             <button
-              onClick={signOut}
+              onClick={() => setConfirmSignOut(true)}
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100 transition hover:bg-white/10"
             >
               Sign out
@@ -424,6 +425,37 @@ export default function Dashboard() {
 
       {showAdd && <AccountModal onClose={() => setShowAdd(false)} onSubmit={addAccount} />}
       {editing && <AccountModal initial={editing} onClose={() => setEditing(null)} onSubmit={updateAccount} onDelete={deleteAccount} />}
+
+      {confirmSignOut && (
+        <div
+          className="fixed inset-0 z-50 grid place-items-center bg-black/70 px-4 backdrop-blur"
+          onClick={() => setConfirmSignOut(false)}
+        >
+          <div
+            className="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900 p-6 shadow-2xl shadow-black/50"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h4 className="text-lg font-bold text-white">Sign out?</h4>
+            <p className="mt-1 text-sm text-slate-400">
+              Are you sure you want to sign out of your account?
+            </p>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setConfirmSignOut(false)}
+                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-slate-100 transition hover:bg-white/10"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={signOut}
+                className="rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-500"
+              >
+                Sign out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
