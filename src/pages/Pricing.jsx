@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getPaddle, PRICES } from '../lib/paddle'
 import { useAuth } from '../context/AuthContext'
+import LegalLinks from '../components/LegalLinks.jsx'
 
 const EARLY_BIRD_LIMIT = 100
 
@@ -116,6 +117,11 @@ export default function Pricing() {
             </button>
           </div>
         </div>
+
+        <footer className="mt-16 border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
+          <LegalLinks className="mb-4" />
+          © {new Date().getFullYear()} PropLedger. All rights reserved.
+        </footer>
       </div>
     </div>
   )

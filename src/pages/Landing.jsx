@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Logo from '../components/Logo.jsx'
+import LegalLinks from '../components/LegalLinks.jsx'
 
 const features = [
   {
@@ -132,6 +133,7 @@ export default function Landing() {
       </main>
 
       <footer className="border-t border-white/5 py-8 text-center text-sm text-slate-500">
+        <LegalLinks className="mb-4" />
         © {new Date().getFullYear()} PropLedger. Built for funded traders.
       </footer>
     </div>
