@@ -32,6 +32,10 @@ export default function Pricing() {
       paddle.Checkout.open({
         items: [{ priceId, quantity: 1 }],
         customer: { email: user.email },
+        customData: { user_id: user.id },
+        settings: {
+          successUrl: `${window.location.origin}/welcome`,
+        },
       })
     } catch (err) {
       console.error('Checkout error:', err)
