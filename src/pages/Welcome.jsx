@@ -6,9 +6,17 @@ import { useSubscription } from '../hooks/useSubscription.js'
 
 export default function Welcome() {
   const { user, loading: authLoading } = useAuth()
-  const { isActive, loading: subLoading } = useSubscription()
+  const { isActive, loading: subLoading, refresh } = useSubscription()
   const navigate = useNavigate()
   const [waitedTooLong, setWaitedTooLong] = useState(false)
+
+  // Actively poll for activation instead of waiting on the real-time event,
+  // which can lag a few seconds behind the webhook write.
+  useEffect(() => {
+    if (isActive) return
+    const id = setInterval(() => refresh(), 2500)
+    return () => clearInterval(id)
+  }, [isActive, refresh])
 
   // The webhook may take a few seconds to write the subscription row.
   // useSubscription has a real-time listener, so isActive flips on its own.
