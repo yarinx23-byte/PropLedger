@@ -49,7 +49,12 @@ export default function Login() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-300">Password</label>
+              <div className="mb-1 flex items-center justify-between">
+                <label className="block text-sm font-medium text-slate-300">Password</label>
+                <Link to="/forgot-password" className="text-sm font-medium text-brand-300 hover:text-brand-200">
+                  Forgot password?
+                </Link>
+              </div>
               <input
                 className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-brand-400 focus:bg-white/10"
                 type="password"

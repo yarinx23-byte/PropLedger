@@ -47,8 +47,24 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
+  // Send a password-reset email. The link points back to /reset-password.
+  async function resetPassword(email) {
+    if (!supabase) throw new Error('Supabase is not configured. Add your .env keys and restart the dev server.')
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    })
+    if (error) throw error
+  }
+
+  // Set a new password (used after following the recovery link, or while logged in).
+  async function updatePassword(newPassword) {
+    if (!supabase) throw new Error('Supabase is not configured. Add your .env keys and restart the dev server.')
+    const { error } = await supabase.auth.updateUser({ password: newPassword })
+    if (error) throw error
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut, resetPassword, updatePassword }}>
       {children}
     </AuthContext.Provider>
   )
