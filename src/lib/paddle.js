@@ -8,6 +8,14 @@ export async function getPaddle() {
   paddleInstance = await initializePaddle({
     environment: import.meta.env.VITE_PADDLE_ENV || 'sandbox',
     token: import.meta.env.VITE_PADDLE_CLIENT_TOKEN,
+    eventCallback: (event) => {
+      // When checkout finishes, leave Paddle's success screen and take the
+      // user to our post-checkout page, which waits for the subscription to
+      // activate and then forwards to the dashboard.
+      if (event?.name === 'checkout.completed') {
+        window.location.assign('/welcome')
+      }
+    },
   })
 
   return paddleInstance
