@@ -14,13 +14,17 @@ export function useSubscription() {
       return
     }
 
+    // Reset to loading whenever the user changes, so ProtectedRoute waits for
+    // the fresh result instead of acting on a stale `loading = false`.
+    setLoading(true)
+
     async function fetchSubscription() {
       const { data, error } = await supabase
         .from('subscriptions')
         .select('*')
         .eq('user_id', user.id)
         .in('status', ['active', 'trialing'])
-        .single()
+        .maybeSingle()
 
       if (error) {
         setSubscription(null)
