@@ -200,6 +200,10 @@ export default function Dashboard() {
           </div>
         )}
 
+        {!loading && accounts.length === 0 ? (
+          <EmptyDashboard onAdd={() => setShowAdd(true)} />
+        ) : (
+        <>
         {/* Date filter bar */}
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur">
           <div className="flex items-center gap-1">
@@ -421,6 +425,8 @@ export default function Dashboard() {
             </ul>
           </div>
         </section>
+        </>
+        )}
       </main>
 
       {showAdd && <AccountModal onClose={() => setShowAdd(false)} onSubmit={addAccount} />}
@@ -487,6 +493,31 @@ function Row({ label, val, color }) {
       <span className="text-slate-400">{label}</span>
       <span className={color}>{val}</span>
     </li>
+  )
+}
+
+function EmptyDashboard({ onAdd }) {
+  return (
+    <div className="mt-10 grid place-items-center rounded-2xl border border-dashed border-white/15 bg-white/[0.03] px-6 py-16 text-center backdrop-blur">
+      <div className="grid h-16 w-16 place-items-center rounded-2xl bg-brand-500/15 text-brand-200">
+        <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 3v18h18" />
+          <path d="M7 14l4-4 3 3 5-6" />
+        </svg>
+      </div>
+      <h2 className="mt-6 text-2xl font-bold text-white">Welcome to PropLedger 👋</h2>
+      <p className="mt-2 max-w-md text-slate-400">
+        Add your first funded account to start tracking payouts, fees, and your real net profit -
+        all in one clean ledger.
+      </p>
+      <button
+        onClick={onAdd}
+        className="mt-8 rounded-xl bg-brand-600 px-6 py-3 font-semibold text-white shadow-[0_0_40px_-8px_rgba(139,92,246,0.7)] transition hover:bg-brand-500 active:translate-y-px"
+      >
+        + Add your first account
+      </button>
+      <p className="mt-4 text-xs text-slate-500">It only takes a minute - firm, size, fees, and payouts.</p>
+    </div>
   )
 }
 
