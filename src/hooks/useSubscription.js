@@ -14,13 +14,16 @@ export function useSubscription() {
       setLoading(false)
       return
     }
+    // A user can have more than one row over time (e.g. an old canceled sub
+    // plus a new one). Take the most recently updated active/trialing row.
     const { data, error } = await supabase
       .from('subscriptions')
       .select('*')
       .eq('user_id', user.id)
       .in('status', ['active', 'trialing'])
-      .maybeSingle()
-    setSubscription(error ? null : data)
+      .order('updated_at', { ascending: false })
+      .limit(1)
+    setSubscription(error || !data?.length ? null : data[0])
     setLoading(false)
   }, [user])
 
