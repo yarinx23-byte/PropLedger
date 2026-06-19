@@ -64,7 +64,29 @@ export default function Privacy() {
         </ul>
       </Section>
 
-      <Section title="6. Your rights">
+      <Section title="6. Cookies and local storage">
+        <p>
+          {COMPANY.name} relies on a small amount of essential browser storage to function - we do not currently
+          use advertising or tracking cookies.
+        </p>
+        <ul className="list-disc space-y-1 pl-6">
+          <li>
+            <span className="text-slate-200">Local storage:</span> we keep your login session in your browser's
+            local storage so you stay signed in. This is required for the Service to work.
+          </li>
+          <li>
+            <span className="text-slate-200">Payment cookies:</span> when you check out, our payment provider
+            Paddle may set its own cookies to process the transaction and prevent fraud. These are governed by
+            Paddle's own policies.
+          </li>
+        </ul>
+        <p>
+          If we introduce analytics or marketing cookies in the future, we will update this policy and, where
+          required, ask for your consent first.
+        </p>
+      </Section>
+
+      <Section title="7. Your rights">
         <p>
           Depending on your location, you may have the right to access, correct, export, or delete your personal
           data, and to object to or restrict certain processing. You can edit or delete most of your Service data
@@ -72,7 +94,7 @@ export default function Privacy() {
         </p>
       </Section>
 
-      <Section title="7. Data retention">
+      <Section title="8. Data retention">
         <p>
           We retain your data for as long as your account is active or as needed to provide the Service. If you
           delete your account, we will delete or anonymize your personal data within a reasonable period, except
@@ -80,21 +102,21 @@ export default function Privacy() {
         </p>
       </Section>
 
-      <Section title="8. Children's privacy">
+      <Section title="9. Children's privacy">
         <p>
           The Service is not intended for anyone under 18, and we do not knowingly collect personal information
           from children.
         </p>
       </Section>
 
-      <Section title="9. Changes to this policy">
+      <Section title="10. Changes to this policy">
         <p>
           We may update this Privacy Policy from time to time. We will revise the "Last updated" date above and,
           for material changes, take reasonable steps to notify you.
         </p>
       </Section>
 
-      <Section title="10. Contact">
+      <Section title="11. Contact">
         <p>
           For privacy questions or requests, contact us at{' '}
           <a href={`mailto:${COMPANY.contactEmail}`} className="text-brand-300 hover:text-brand-200">
