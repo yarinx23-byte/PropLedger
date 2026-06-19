@@ -46,7 +46,7 @@ export default function Landing() {
 
       <main className="mx-auto max-w-6xl px-6">
         {/* Hero */}
-        <section className="grid items-center gap-12 py-20 lg:grid-cols-2">
+        <section className="grid items-center gap-8 py-10 sm:py-14 lg:gap-12 lg:py-20 lg:grid-cols-2">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-brand-400/30 bg-brand-500/10 px-3 py-1 text-xs font-medium text-brand-300">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-400" />
@@ -105,7 +105,7 @@ export default function Landing() {
         </section>
 
         {/* Features */}
-        <section className="grid gap-6 py-16 md:grid-cols-3">
+        <section className="grid gap-6 py-8 md:py-16 md:grid-cols-3">
           {features.map((f) => (
             <div key={f.title} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur">
               <div className="flex items-center gap-3">
@@ -118,7 +118,7 @@ export default function Landing() {
         </section>
 
         {/* CTA strip */}
-        <section className="my-12 flex flex-col items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-8 text-center backdrop-blur md:flex-row md:justify-between md:text-left">
+        <section className="mt-4 mb-10 md:my-12 flex flex-col items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-6 md:p-8 text-center backdrop-blur md:flex-row md:justify-between md:text-left">
           <div>
             <h3 className="text-2xl font-bold text-white">Know your real edge.</h3>
             <p className="mt-1 text-slate-400">Stop guessing what's left after fees. Start with PropLedger.</p>
