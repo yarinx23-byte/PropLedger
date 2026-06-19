@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../components/Logo.jsx'
+import LegalLinks from '../components/LegalLinks.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { fmtUSD, fmtUSDSigned, todayISO, monthKey, monthLabel } from '../lib/format.js'
 import {
@@ -435,6 +436,11 @@ export default function Dashboard() {
         </>
         )}
       </main>
+
+      <footer className="mx-auto max-w-6xl border-t border-white/5 px-4 sm:px-6 py-8 text-center text-sm text-slate-500">
+        <LegalLinks className="mb-4" />
+        © {new Date().getFullYear()} PropLedger. Built for funded traders.
+      </footer>
 
       {showAdd && <AccountModal onClose={() => setShowAdd(false)} onSubmit={addAccount} />}
       {editing && <AccountModal initial={editing} onClose={() => setEditing(null)} onSubmit={updateAccount} onDelete={deleteAccount} />}
