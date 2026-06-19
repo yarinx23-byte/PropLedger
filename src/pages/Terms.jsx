@@ -45,9 +45,9 @@ export default function Terms() {
       <Section title="5. Acceptable use">
         <p>You agree not to:</p>
         <ul className="list-disc space-y-1 pl-6">
-          <li>use the Service for any unlawful purpose or in violation of these Terms;</li>
-          <li>attempt to gain unauthorized access to the Service, other accounts, or our systems;</li>
-          <li>interfere with or disrupt the integrity or performance of the Service;</li>
+          <li>use the Service for any unlawful purpose or in violation of these Terms.</li>
+          <li>attempt to gain unauthorized access to the Service, other accounts, or our systems.</li>
+          <li>interfere with or disrupt the integrity or performance of the Service.</li>
           <li>reverse engineer, resell, or redistribute the Service without our written permission.</li>
         </ul>
       </Section>

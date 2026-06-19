@@ -35,10 +35,10 @@ export default function Privacy() {
 
       <Section title="3. How we use your information">
         <ul className="list-disc space-y-1 pl-6">
-          <li>to provide, maintain, and improve the Service;</li>
-          <li>to authenticate you and keep your data private to your account;</li>
-          <li>to process subscriptions and manage access to paid features;</li>
-          <li>to communicate with you about your account, security, and important changes;</li>
+          <li>to provide, maintain, and improve the Service.</li>
+          <li>to authenticate you and keep your data private to your account.</li>
+          <li>to process subscriptions and manage access to paid features.</li>
+          <li>to communicate with you about your account, security, and important changes.</li>
           <li>to comply with legal obligations and prevent fraud or abuse.</li>
         </ul>
       </Section>
@@ -58,8 +58,8 @@ export default function Privacy() {
           operate the Service, under appropriate safeguards:
         </p>
         <ul className="list-disc space-y-1 pl-6">
-          <li><span className="text-slate-200">Supabase</span> - database, authentication, and hosting;</li>
-          <li><span className="text-slate-200">Paddle</span> - payment processing and subscription management;</li>
+          <li><span className="text-slate-200">Supabase</span> - database, authentication, and hosting.</li>
+          <li><span className="text-slate-200">Paddle</span> - payment processing and subscription management.</li>
           <li>where required by law, or to protect our rights and the safety of users.</li>
         </ul>
       </Section>
