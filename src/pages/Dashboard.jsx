@@ -160,7 +160,7 @@ export default function Dashboard() {
     <div className="min-h-screen">
       {/* Header */}
       <header className="border-b border-white/5 bg-slate-950/60 backdrop-blur sticky top-0 z-10">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 py-4">
           <Logo />
           <div className="flex items-center gap-3">
             <span className="hidden text-sm text-slate-400 sm:inline">{user?.email}</span>
@@ -180,7 +180,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-6 py-8">
+      <main className="mx-auto max-w-6xl px-4 sm:px-6 py-8">
         {/* Page title */}
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
@@ -369,19 +369,19 @@ export default function Dashboard() {
                 </p>
               )}
               {periodExpenses.map((e) => (
-                <div key={e.id} className="flex items-center gap-2">
+                <div key={e.id} className="flex flex-wrap items-center gap-2">
                   <input
                     type="text"
                     value={e.name}
                     onChange={(ev) => updateExpenseRow(e.id, { name: ev.target.value })}
                     onBlur={(ev) => saveExpenseRow(e.id, { name: ev.target.value })}
                     placeholder="Expense name"
-                    className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-brand-400 focus:bg-white/10"
+                    className="min-w-0 w-full sm:w-auto sm:flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-brand-400 focus:bg-white/10"
                   />
                   <DatePicker
                     value={e.date}
                     onChange={(d) => { updateExpenseRow(e.id, { date: d }); saveExpenseRow(e.id, { date: d }) }}
-                    className="w-44 shrink-0"
+                    className="flex-1 sm:w-44 sm:flex-none"
                   />
                   <input
                     type="number"
@@ -608,7 +608,7 @@ function AccountModal({ initial, onClose, onSubmit, onDelete }) {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg rounded-2xl border border-white/10 bg-slate-900 p-8"
+        className="w-full max-w-lg rounded-2xl border border-white/10 bg-slate-900 p-6 sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         <h3 className="text-xl font-bold text-white">{isEdit ? 'Edit funded account' : 'Add funded account'}</h3>
@@ -657,20 +657,20 @@ function AccountModal({ initial, onClose, onSubmit, onDelete }) {
                 </p>
               )}
               {payouts.map((p) => (
-                <div key={p.id} className="flex items-center gap-2">
+                <div key={p.id} className="flex flex-wrap items-center gap-2">
                   <DatePicker
                     value={p.date}
                     onChange={(d) => updatePayout(p.id, { date: d })}
-                    className="flex-1"
+                    className="w-full sm:flex-1"
                   />
                   <input
                     type="number"
                     value={p.amount}
                     onChange={(ev) => updatePayout(p.id, { amount: ev.target.value })}
                     placeholder="0"
-                    className={`${inputCls} w-28 text-right`}
+                    className="flex-1 sm:w-28 sm:flex-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-right text-sm text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-brand-400 focus:bg-white/10"
                   />
-                  <span className="w-24 shrink-0 text-right text-sm font-medium text-emerald-300">
+                  <span className="w-20 sm:w-24 shrink-0 text-right text-sm font-medium text-emerald-300">
                     {fmtUSD((Number(p.amount) || 0) * split / 100)}
                   </span>
                   <button
