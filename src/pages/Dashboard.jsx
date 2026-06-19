@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect, useRef, useCallback } from 'react'
+import { Link } from 'react-router-dom'
 import Logo from '../components/Logo.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { fmtUSD, fmtUSDSigned, todayISO, monthKey, monthLabel } from '../lib/format.js'
@@ -163,6 +164,12 @@ export default function Dashboard() {
           <Logo />
           <div className="flex items-center gap-3">
             <span className="hidden text-sm text-slate-400 sm:inline">{user?.email}</span>
+            <Link
+              to="/account"
+              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100 transition hover:bg-white/10"
+            >
+              Account
+            </Link>
             <button
               onClick={() => setConfirmSignOut(true)}
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100 transition hover:bg-white/10"
