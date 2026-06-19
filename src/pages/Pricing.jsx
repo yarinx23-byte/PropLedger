@@ -4,21 +4,34 @@ import { getPaddle, PRICES } from '../lib/paddle'
 import { useAuth } from '../context/AuthContext'
 import LegalLinks from '../components/LegalLinks.jsx'
 
-const EARLY_BIRD_LIMIT = 100
+// When the Early Bird offer ends. Update this one line when you launch
+// (e.g. set it to your launch date + 30 days).
+const EARLY_BIRD_DEADLINE = new Date('2026-07-19T23:59:59')
+
+function getTimeLeft(deadline) {
+  const ms = deadline.getTime() - Date.now()
+  if (ms <= 0) return null
+  return {
+    days: Math.floor(ms / 86400000),
+    hours: Math.floor((ms % 86400000) / 3600000),
+    minutes: Math.floor((ms % 3600000) / 60000),
+    seconds: Math.floor((ms % 60000) / 1000),
+  }
+}
 
 export default function Pricing() {
   const { user } = useAuth()
   const navigate = useNavigate()
-  const [earlyBirdCount, setEarlyBirdCount] = useState(0)
   const [loading, setLoading] = useState(null)
+  const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(EARLY_BIRD_DEADLINE))
 
   useEffect(() => {
-    // TODO: שליפת מספר מנויי Early Bird מ-Supabase
-    setEarlyBirdCount(12) // זמני
+    const id = setInterval(() => setTimeLeft(getTimeLeft(EARLY_BIRD_DEADLINE)), 1000)
+    return () => clearInterval(id)
   }, [])
 
-  const earlyBirdAvailable = earlyBirdCount < EARLY_BIRD_LIMIT
-  const earlyBirdLeft = EARLY_BIRD_LIMIT - earlyBirdCount
+  const earlyBirdAvailable = timeLeft !== null
+  const pad = (n) => String(n).padStart(2, '0')
 
   async function handleCheckout(priceId, planName) {
     if (!user) {
@@ -57,11 +70,16 @@ export default function Pricing() {
           {earlyBirdAvailable && (
             <div className="relative border border-yellow-500 rounded-2xl p-8 bg-gray-900">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full">
-                🔥 EARLY BIRD — {earlyBirdLeft} left
+                🔥 EARLY BIRD
               </div>
               <h2 className="text-xl font-bold mb-2">Early Bird</h2>
               <div className="text-4xl font-bold mb-1">$12<span className="text-lg text-gray-400">/mo</span></div>
-              <p className="text-gray-400 text-sm mb-6">Locked in forever</p>
+              <p className="text-gray-400 text-sm mb-4">Locked in forever</p>
+              {timeLeft && (
+                <div className="mb-6 rounded-lg border border-yellow-500/40 bg-yellow-500/10 px-3 py-2 text-center text-sm font-semibold text-yellow-300">
+                  ⏳ Ends in {timeLeft.days}d {pad(timeLeft.hours)}h {pad(timeLeft.minutes)}m {pad(timeLeft.seconds)}s
+                </div>
+              )}
               <ul className="space-y-2 text-sm text-gray-300 mb-8">
                 <li>✓ Unlimited trades</li>
                 <li>✓ All analytics</li>
