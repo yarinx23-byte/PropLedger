@@ -4,7 +4,7 @@
 @source "./**/*.{js,jsx}";
 
 @theme {
-  --font-sora: 'Sora', system-ui, sans-serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
 
   --color-brand-50: #f5f3ff;
   --color-brand-100: #ede9fe;
@@ -33,15 +33,15 @@ input[type="number"] {
   appearance: textfield;
 }
 
-/* Sora is missing/squarish for the bullet glyph, so both the placeholder and
-   the masked dots render as squares. Use a fallback font on password fields so
-   the dots are clean round circles. */
+/* Force a font with clean round bullets on password fields so the placeholder
+   and masked dots always render as circles regardless of the body font. */
 input[type="password"] {
   font-family: Verdana, Arial, sans-serif;
 }
 
 body {
-  font-family: var(--font-sora);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
   background-color: #020617;
   color: #f1f5f9;
   -webkit-font-smoothing: antialiased;
