@@ -212,16 +212,16 @@ export default function Dashboard() {
         ) : (
         <>
         {/* Date filter bar */}
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur">
-          <div className="flex items-center gap-1">
+        <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3 backdrop-blur sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+          <div className="flex items-center gap-1 w-full sm:w-auto">
             <button
               onClick={() => shiftMonth(-1)}
               aria-label="Previous month"
-              className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:bg-white/10"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:bg-white/10"
             >
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
             </button>
-            <div className={`min-w-44 rounded-xl px-4 py-2 text-center text-sm font-semibold transition ${
+            <div className={`flex-1 sm:min-w-44 sm:flex-none rounded-xl px-4 py-2 text-center text-sm font-semibold transition ${
               view === 'month' ? 'bg-brand-600 text-white' : 'text-slate-300'
             }`}>
               {view === 'all' ? 'All time' : monthLabel(cursor.year, cursor.month)}
@@ -229,16 +229,16 @@ export default function Dashboard() {
             <button
               onClick={() => shiftMonth(1)}
               aria-label="Next month"
-              className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:bg-white/10"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:bg-white/10"
             >
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
             </button>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               onClick={() => { setView('month'); setCursor({ year: now.getFullYear(), month: now.getMonth() }) }}
-              className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
+              className={`flex-1 sm:flex-none rounded-xl px-4 py-2 text-sm font-medium transition ${
                 isThisMonth ? 'bg-brand-600 text-white' : 'border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10'
               }`}
             >
@@ -246,7 +246,7 @@ export default function Dashboard() {
             </button>
             <button
               onClick={() => setView('all')}
-              className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
+              className={`flex-1 sm:flex-none rounded-xl px-4 py-2 text-sm font-medium transition ${
                 view === 'all' ? 'bg-brand-600 text-white' : 'border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10'
               }`}
             >
@@ -256,7 +256,7 @@ export default function Dashboard() {
         </div>
 
         {/* Stat cards */}
-        <section className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <section className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           <StatCard
             label="Net profit"
             value={fmtUSDSigned(totals.net)}
@@ -483,13 +483,13 @@ function Cost({ value }) {
 
 function StatCard({ label, value, color, highlight }) {
   return (
-    <div className={`rounded-2xl border p-6 backdrop-blur ${
+    <div className={`rounded-2xl border p-4 sm:p-6 backdrop-blur ${
       highlight
         ? 'border-brand-400/40 bg-brand-500/[0.08]'
         : 'border-white/10 bg-white/[0.04]'
     }`}>
       <div className="text-sm text-slate-400">{label}</div>
-      <div className={`mt-2 text-2xl font-bold ${color}`}>{value}</div>
+      <div className={`mt-1 sm:mt-2 text-xl sm:text-2xl font-bold ${color}`}>{value}</div>
     </div>
   )
 }
