@@ -8,6 +8,34 @@ const supabase = createClient(
 
 const PADDLE_API_KEY = Deno.env.get('PADDLE_API_KEY')
 const PADDLE_API_BASE = Deno.env.get('PADDLE_API_BASE') || 'https://api.paddle.com'
+const PADDLE_WEBHOOK_SECRET = Deno.env.get('PADDLE_WEBHOOK_SECRET')
+
+// Verify the Paddle-Signature header (HMAC-SHA256 of `${ts}:${rawBody}`).
+// Returns true if no secret is configured yet, so deploying this code does not
+// break the live webhook before the secret is added.
+async function verifyPaddleSignature(rawBody: string, header: string | null): Promise<boolean> {
+  if (!PADDLE_WEBHOOK_SECRET) {
+    console.warn('PADDLE_WEBHOOK_SECRET not set - skipping signature verification')
+    return true
+  }
+  if (!header) return false
+
+  const parts = Object.fromEntries(header.split(';').map((kv) => kv.split('=')))
+  const ts = parts['ts']
+  const h1 = parts['h1']
+  if (!ts || !h1) return false
+
+  const key = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(PADDLE_WEBHOOK_SECRET),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  )
+  const sigBuf = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(`${ts}:${rawBody}`))
+  const computed = [...new Uint8Array(sigBuf)].map((b) => b.toString(16).padStart(2, '0')).join('')
+  return computed === h1
+}
 
 // Known price IDs -> plan name (env vars first, hardcoded fallback).
 const priceToPlan: Record<string, string> = {
@@ -44,7 +72,15 @@ async function userIdFromEmail(email: string): Promise<string | null> {
 
 serve(async (req) => {
   try {
-    const body = await req.json()
+    // Read the raw body first - signature verification needs the exact bytes.
+    const rawBody = await req.text()
+    const valid = await verifyPaddleSignature(rawBody, req.headers.get('Paddle-Signature'))
+    if (!valid) {
+      console.warn('Invalid Paddle signature - rejecting request')
+      return new Response('Invalid signature', { status: 401 })
+    }
+
+    const body = JSON.parse(rawBody)
     const eventType = body.event_type
     const data = body.data
 
