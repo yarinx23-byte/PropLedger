@@ -37,7 +37,17 @@ export default function Account() {
     setBusy(true)
     try {
       const { data, error } = await supabase.functions.invoke('paddle-portal')
-      if (error) throw error
+      if (error) {
+        // Surface the function's own error message instead of the generic one.
+        let msg = error.message
+        try {
+          const body = await error.context.json()
+          if (body?.error) msg = body.error
+        } catch {
+          // ignore - fall back to the generic message
+        }
+        throw new Error(msg)
+      }
       if (data?.url) {
         window.location.href = data.url
       } else {

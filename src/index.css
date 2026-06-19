@@ -33,10 +33,11 @@ input[type="number"] {
   appearance: textfield;
 }
 
-/* Sora renders the bullet glyph squarish; use a font with round bullets for
-   the password placeholder so the dots look like clean circles. */
-input[type="password"]::placeholder {
-  font-family: Arial, Helvetica, sans-serif;
+/* Sora is missing/squarish for the bullet glyph, so both the placeholder and
+   the masked dots render as squares. Use a fallback font on password fields so
+   the dots are clean round circles. */
+input[type="password"] {
+  font-family: Verdana, Arial, sans-serif;
 }
 
 body {
