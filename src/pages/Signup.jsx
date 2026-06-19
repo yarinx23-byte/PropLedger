@@ -52,15 +52,15 @@ export default function Signup() {
           <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-300">Email</label>
-              <input className={inputCls} type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@trader.com" />
+              <input className={inputCls} type="email" name="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@trader.com" />
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-300">Password</label>
-              <input className={inputCls} type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 6 characters" />
+              <input className={inputCls} type="password" name="new-password" autoComplete="new-password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 6 characters" />
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-300">Confirm password</label>
-              <input className={inputCls} type="password" required value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="••••••••" />
+              <input className={inputCls} type="password" autoComplete="new-password" required value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="••••••••" />
             </div>
 
             {err && (
