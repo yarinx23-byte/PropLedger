@@ -14,4 +14,15 @@ if (!isSupabaseConfigured) {
 
 // Only build a real client when configured; otherwise leave it null so the app
 // can render a setup screen instead of crashing on an invalid URL.
-export const supabase = isSupabaseConfigured ? createClient(url, anonKey) : null
+export const supabase = isSupabaseConfigured
+  ? createClient(url, anonKey, {
+      auth: {
+        // Keep users signed in across reloads and browser restarts.
+        persistSession: true,
+        autoRefreshToken: true,
+        // Needed so the password-recovery link can establish a session.
+        detectSessionInUrl: true,
+        storage: window.localStorage,
+      },
+    })
+  : null
