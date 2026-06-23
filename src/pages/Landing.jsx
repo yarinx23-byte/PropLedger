@@ -46,7 +46,7 @@ export default function Landing() {
 
       <main className="mx-auto max-w-6xl px-6">
         {/* Hero */}
-        <section className="grid items-center gap-8 py-10 sm:py-14 lg:gap-12 lg:py-20 lg:grid-cols-2">
+        <section className="grid items-center gap-8 py-6 sm:py-8 lg:gap-12 lg:py-12 lg:grid-cols-2">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-brand-400/30 bg-brand-500/10 px-3 py-1 text-xs font-medium text-brand-300">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-400" />
