@@ -125,15 +125,25 @@ export default function Dashboard() {
   // These throw on failure so the modal can show the error in-place
   // (a dashboard-level banner would be hidden behind the modal overlay).
   async function addAccount(data) {
-    const acc = await createAccount(user?.id, data)
-    setAccounts((prev) => [...prev, acc])
+    const { quantity = 1, ...base } = data
+    const n = Math.max(1, Math.min(50, Number(quantity) || 1))
+    const created = []
+    for (let i = 0; i < n; i++) {
+      // Number the copies so identical accounts stay distinguishable.
+      const firm = n > 1 ? `${base.firm} #${i + 1}` : base.firm
+      created.push(await createAccount(user?.id, { ...base, firm }))
+    }
+    setAccounts((prev) => [...prev, ...created])
     setShowAdd(false)
-    // Make the new account visible: jump the filter to its purchase month
+    // Make the new accounts visible: jump the filter to their purchase month
     // (otherwise an account dated outside the current period looks "lost").
-    const pd = parseISO(acc.purchaseDate)
-    if (pd) setCursor({ year: pd.y, month: pd.m })
-    else setView('all')
-    if (pd) setView('month')
+    const pd = parseISO(created[0]?.purchaseDate)
+    if (pd) {
+      setCursor({ year: pd.y, month: pd.m })
+      setView('month')
+    } else {
+      setView('all')
+    }
   }
 
   async function updateAccount(data) {
@@ -610,6 +620,7 @@ function AccountModal({ initial, onClose, onSubmit, onDelete }) {
   const [payoutSplit, setPayoutSplit] = useState(initial?.payoutSplit ?? 90)
   const [resetFee, setResetFee] = useState(initial?.resetFee ?? 0)
   const [payouts, setPayouts] = useState(initial?.payouts ?? [])
+  const [quantity, setQuantity] = useState(1)
 
   const split = Number(payoutSplit) || 0
   const grossTotal = payouts.reduce((s, p) => s + (Number(p.amount) || 0), 0)
@@ -650,6 +661,7 @@ function AccountModal({ initial, onClose, onSubmit, onDelete }) {
         payoutSplit: Number(payoutSplit),
         resetFee: Number(resetFee),
         payouts: payouts.map((p) => ({ id: p.id, date: p.date, amount: Number(p.amount) || 0 })),
+        quantity: Math.max(1, Math.min(50, Number(quantity) || 1)),
       })
       // On success the parent unmounts this modal; nothing else to do.
     } catch (ex) {
@@ -708,6 +720,11 @@ function AccountModal({ initial, onClose, onSubmit, onDelete }) {
           <Field label="Reset fee ($)" hint="Per reset">
             <input className={inputCls} type="number" value={resetFee} onChange={(e) => setResetFee(e.target.value)} />
           </Field>
+          {!isEdit && (
+            <Field label="Quantity" hint="Identical copies" className="sm:col-span-2">
+              <input className={inputCls} type="number" min="1" max="50" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
+            </Field>
+          )}
 
           {/* Payouts list */}
           <div className="sm:col-span-2">
