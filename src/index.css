@@ -23,6 +23,16 @@ html, body, #root {
   height: 100%;
 }
 
+/* Show the hand (pointer) cursor on clickable controls. Browsers don't do this
+   for <button> by default, so buttons feel less clickable without it. */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
