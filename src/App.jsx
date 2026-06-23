@@ -11,6 +11,7 @@ import Account from './pages/Account.jsx'
 import Terms from './pages/Terms.jsx'
 import Privacy from './pages/Privacy.jsx'
 import Refund from './pages/Refund.jsx'
+import Contact from './pages/Contact.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
       <Route path="/terms" element={<Terms />} />
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/refund" element={<Refund />} />
+      <Route path="/contact" element={<Contact />} />
       <Route
         path="/dashboard"
         element={

@@ -5,6 +5,7 @@ const links = [
   { to: '/terms', label: 'Terms of Service' },
   { to: '/privacy', label: 'Privacy Policy' },
   { to: '/refund', label: 'Refund Policy' },
+  { to: '/contact', label: 'Contact' },
 ]
 
 // Inline row of legal links for use in page footers.
