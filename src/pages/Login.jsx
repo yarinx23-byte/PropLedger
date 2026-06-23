@@ -1,15 +1,25 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Logo from '../components/Logo.jsx'
+import GoogleButton from '../components/GoogleButton.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 
 export default function Login() {
-  const { signIn } = useAuth()
+  const { signIn, signInWithGoogle } = useAuth()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [err, setErr] = useState('')
   const [busy, setBusy] = useState(false)
+
+  async function onGoogle() {
+    setErr('')
+    try {
+      await signInWithGoogle()
+    } catch (ex) {
+      setErr(ex.message || 'Google sign-in failed')
+    }
+  }
 
   async function onSubmit(e) {
     e.preventDefault()
@@ -36,7 +46,16 @@ export default function Login() {
           <h1 className="text-2xl font-bold text-white">Welcome back</h1>
           <p className="mt-1 text-sm text-slate-400">Log in to your PropLedger dashboard.</p>
 
-          <form onSubmit={onSubmit} className="mt-6 space-y-4">
+          <div className="mt-6">
+            <GoogleButton onClick={onGoogle} />
+          </div>
+          <div className="my-5 flex items-center gap-3 text-xs text-slate-500">
+            <span className="h-px flex-1 bg-white/10" />
+            or
+            <span className="h-px flex-1 bg-white/10" />
+          </div>
+
+          <form onSubmit={onSubmit} className="space-y-4">
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-300">Email</label>
               <input
