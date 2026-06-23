@@ -323,6 +323,7 @@ export default function Dashboard() {
                     <th className="px-4 py-3">Firm</th>
                     <th className="px-4 py-3">Size</th>
                     <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">Purchased</th>
                     <th className="px-4 py-3 text-right">Challenge</th>
                     <th className="px-4 py-3 text-right">Activation</th>
                     <th className="px-4 py-3 text-right">Payout fees</th>
@@ -335,7 +336,7 @@ export default function Dashboard() {
                 <tbody className="divide-y divide-white/5">
                   {visibleAccounts.length === 0 && (
                     <tr>
-                      <td colSpan={10} className="px-4 py-10 text-center text-sm text-slate-500">
+                      <td colSpan={11} className="px-4 py-10 text-center text-sm text-slate-500">
                         No account activity in {monthLabel(cursor.year, cursor.month)}.
                       </td>
                     </tr>
@@ -355,6 +356,7 @@ export default function Dashboard() {
                           {a.status}
                         </span>
                       </td>
+                      <td className="px-4 py-4 text-slate-400">{shortDate(a.purchaseDate) || '-'}</td>
                       <Cost value={a._challenge} />
                       <Cost value={a._activation} />
                       <Cost value={a._payoutFees} />
