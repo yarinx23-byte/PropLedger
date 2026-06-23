@@ -14,15 +14,23 @@ export function AuthProvider({ children }) {
       return
     }
 
+    // Keep the same user object reference when it's the same user, so a token
+    // refresh (e.g. when the tab regains focus) doesn't cascade into re-renders
+    // that would remount the dashboard and drop open modals / unsaved input.
+    const sync = (session) => {
+      const next = session?.user ?? null
+      setUser((prev) => (prev?.id === next?.id ? prev : next))
+    }
+
     // Load any existing session on mount
     supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null)
+      sync(data.session)
       setLoading(false)
     })
 
     // Keep state in sync with sign-in / sign-out / token refresh
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
+      sync(session)
     })
 
     return () => sub.subscription.unsubscribe()
