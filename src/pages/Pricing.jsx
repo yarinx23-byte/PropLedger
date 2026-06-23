@@ -68,7 +68,7 @@ export default function Pricing() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Early Bird */}
           {earlyBirdAvailable && (
-            <div className="relative border border-yellow-500 rounded-2xl p-8 bg-gray-900">
+            <div className="relative flex flex-col border border-yellow-500 rounded-2xl p-8 bg-gray-900">
               <h2 className="text-xl font-bold mb-2">Early Bird</h2>
               <div className="text-4xl font-bold mb-1">$12<span className="text-lg text-gray-400">/mo</span></div>
               <p className="text-gray-400 text-sm mb-4">Locked in forever</p>
@@ -86,7 +86,7 @@ export default function Pricing() {
               <button
                 onClick={() => handleCheckout(PRICES.earlyBird, 'earlyBird')}
                 disabled={loading === 'earlyBird'}
-                className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 rounded-xl transition"
+                className="w-full mt-auto bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 rounded-xl transition"
               >
                 {loading === 'earlyBird' ? 'Loading...' : 'Start Free Trial'}
               </button>
@@ -94,7 +94,7 @@ export default function Pricing() {
           )}
 
           {/* Monthly */}
-          <div className="border border-gray-700 rounded-2xl p-8 bg-gray-900">
+          <div className="flex flex-col border border-gray-700 rounded-2xl p-8 bg-gray-900">
             <h2 className="text-xl font-bold mb-2">Monthly</h2>
             <div className="text-4xl font-bold mb-1">$19<span className="text-lg text-gray-400">/mo</span></div>
             <p className="text-gray-400 text-sm mb-6">Billed monthly</p>
@@ -107,14 +107,14 @@ export default function Pricing() {
             <button
               onClick={() => handleCheckout(PRICES.monthly, 'monthly')}
               disabled={loading === 'monthly'}
-              className="w-full bg-white hover:bg-gray-200 text-black font-bold py-3 rounded-xl transition"
+              className="w-full mt-auto bg-white hover:bg-gray-200 text-black font-bold py-3 rounded-xl transition"
             >
               {loading === 'monthly' ? 'Loading...' : 'Start Free Trial'}
             </button>
           </div>
 
           {/* Annual */}
-          <div className="relative border border-blue-500 rounded-2xl p-8 bg-gray-900">
+          <div className="relative flex flex-col border border-blue-500 rounded-2xl p-8 bg-gray-900">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">
               BEST VALUE
             </div>
@@ -130,7 +130,7 @@ export default function Pricing() {
             <button
               onClick={() => handleCheckout(PRICES.annual, 'annual')}
               disabled={loading === 'annual'}
-              className="w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 rounded-xl transition"
+              className="w-full mt-auto bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 rounded-xl transition"
             >
               {loading === 'annual' ? 'Loading...' : 'Start Free Trial'}
             </button>
