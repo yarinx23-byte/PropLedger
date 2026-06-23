@@ -52,8 +52,11 @@ create table if not exists public.business_expenses (
   name       text not null default '',
   amount     numeric not null default 0,
   date       date,
+  recurring  boolean not null default false,
   created_at timestamptz not null default now()
 );
+-- For projects created before the recurring column existed:
+alter table public.business_expenses add column if not exists recurring boolean not null default false;
 create index if not exists business_expenses_user_id_idx on public.business_expenses (user_id);
 
 -- ---------------------------------------------------------------------------

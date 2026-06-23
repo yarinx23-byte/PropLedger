@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useRef, useCallback } from 'react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../components/Logo.jsx'
 import LegalLinks from '../components/LegalLinks.jsx'
@@ -10,7 +10,6 @@ import {
   updateAccount as updateAccountDb,
   deleteAccount as deleteAccountDb,
   createExpense,
-  updateExpense as updateExpenseDb,
   deleteExpense as deleteExpenseDb,
 } from '../lib/db.js'
 
@@ -23,6 +22,7 @@ export default function Dashboard() {
   const [showAdd, setShowAdd] = useState(false)
   const [editing, setEditing] = useState(null)
   const [confirmSignOut, setConfirmSignOut] = useState(false)
+  const [expDraft, setExpDraft] = useState(() => ({ name: '', amount: '', date: todayISO(), recurring: false }))
 
   useEffect(() => {
     if (!user) return
@@ -79,8 +79,29 @@ export default function Dashboard() {
 
   const visibleAccounts = derived.filter((a) => a._active)
 
-  const periodExpenses = expenseRows.filter((e) => inPeriod(e.date))
-  const expensesTotal = periodExpenses.reduce((s, e) => s + (Number(e.amount) || 0), 0)
+  // Recurring (monthly) expenses count in every month from their start date.
+  const nowKey = monthKey(now.getFullYear(), now.getMonth())
+  const periodExpenses = useMemo(() => {
+    return expenseRows
+      .map((e) => {
+        const startKey = (e.date || '').slice(0, 7)
+        const amt = Number(e.amount) || 0
+        if (!startKey) return null
+        if (e.recurring) {
+          if (view === 'all') {
+            const months = monthsInclusive(startKey, nowKey)
+            if (months <= 0) return null
+            return { ...e, _amount: amt * months, _months: months }
+          }
+          // Month view: counts once for any month on or after the start month.
+          return startKey <= key ? { ...e, _amount: amt, _months: 1 } : null
+        }
+        // One-time expense.
+        return view === 'all' || startKey === key ? { ...e, _amount: amt, _months: 1 } : null
+      })
+      .filter(Boolean)
+  }, [expenseRows, view, key, nowKey])
+  const expensesTotal = periodExpenses.reduce((s, e) => s + e._amount, 0)
 
   const totals = useMemo(() => {
     const sum = (k) => derived.reduce((s, a) => s + a[k], 0)
@@ -127,22 +148,28 @@ export default function Dashboard() {
     setEditing(null)
   }
 
-  const defaultExpenseDate = view === 'all' ? todayISO() : `${key}-01`
-  async function addExpenseRow() {
+  async function addExpense() {
+    const name = expDraft.name.trim()
+    const amount = Number(expDraft.amount)
+    if (!name || !amount) {
+      setError('Enter an expense name and amount.')
+      return
+    }
     try {
-      const row = await createExpense(user.id, defaultExpenseDate)
+      const row = await createExpense(user.id, {
+        name,
+        amount,
+        date: expDraft.date,
+        recurring: expDraft.recurring,
+      })
       setExpenseRows((prev) => [...prev, row])
+      setError('')
+      // Keep the date for quick consecutive entries; clear the rest.
+      setExpDraft((d) => ({ name: '', amount: '', date: d.date, recurring: false }))
     } catch (e) {
       setError(e.message || 'Failed to add expense')
     }
   }
-  // Update local state for snappy typing; persistence happens via saveExpenseRow.
-  function updateExpenseRow(id, patch) {
-    setExpenseRows((prev) => prev.map((e) => (e.id === id ? { ...e, ...patch } : e)))
-  }
-  const saveExpenseRow = useCallback((id, patch) => {
-    updateExpenseDb(id, patch).catch((e) => setError(e.message || 'Failed to save expense'))
-  }, [])
   async function removeExpenseRow(id) {
     const prev = expenseRows
     setExpenseRows((rows) => rows.filter((e) => e.id !== id))
@@ -352,17 +379,62 @@ export default function Dashboard() {
         <section className="mt-8 grid gap-6 md:grid-cols-2">
           {/* Expenses */}
           <div className={card}>
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-white">Business expenses</h3>
-              <button
-                onClick={addExpenseRow}
-                className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-medium text-slate-100 transition hover:bg-white/10"
-              >
-                + Add expense
-              </button>
-            </div>
-            <p className="mt-1 text-sm text-slate-400">General costs not tied to one account - coaching, education, etc.</p>
+            <h3 className="text-lg font-semibold text-white">Business expenses</h3>
+            <p className="mt-1 text-sm text-slate-400">General costs not tied to one account - coaching, software, education. Mark recurring ones (like a TradingView subscription) to count them every month automatically.</p>
 
+            {/* Add expense form */}
+            <div className="mt-4 space-y-2 rounded-xl border border-white/10 bg-white/[0.02] p-3">
+              <input
+                type="text"
+                value={expDraft.name}
+                onChange={(ev) => setExpDraft((d) => ({ ...d, name: ev.target.value }))}
+                placeholder="Expense name (e.g. TradingView)"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-brand-400 focus:bg-white/10"
+              />
+              <div className="flex flex-wrap items-center gap-2">
+                <DatePicker
+                  value={expDraft.date}
+                  onChange={(d) => setExpDraft((s) => ({ ...s, date: d }))}
+                  className="w-full sm:flex-1"
+                />
+                <input
+                  type="number"
+                  value={expDraft.amount}
+                  onChange={(ev) => setExpDraft((d) => ({ ...d, amount: ev.target.value }))}
+                  placeholder="Amount"
+                  className="flex-1 sm:w-28 sm:flex-none rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-right text-sm text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-brand-400 focus:bg-white/10"
+                />
+              </div>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <button
+                  type="button"
+                  onClick={() => setExpDraft((d) => ({ ...d, recurring: !d.recurring }))}
+                  className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium transition ${
+                    expDraft.recurring
+                      ? 'border-brand-400/40 bg-brand-500/15 text-brand-200'
+                      : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+                  }`}
+                >
+                  <span className={`grid h-4 w-4 place-items-center rounded border ${
+                    expDraft.recurring ? 'border-brand-400 bg-brand-500 text-white' : 'border-white/25'
+                  }`}>
+                    {expDraft.recurring && (
+                      <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5" /></svg>
+                    )}
+                  </span>
+                  Repeat monthly
+                </button>
+                <button
+                  type="button"
+                  onClick={addExpense}
+                  className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-500"
+                >
+                  + Add expense
+                </button>
+              </div>
+            </div>
+
+            {/* Saved expenses */}
             <div className="mt-4 space-y-2">
               {periodExpenses.length === 0 && (
                 <p className="rounded-xl border border-dashed border-white/10 px-4 py-6 text-center text-sm text-slate-500">
@@ -370,32 +442,25 @@ export default function Dashboard() {
                 </p>
               )}
               {periodExpenses.map((e) => (
-                <div key={e.id} className="flex flex-wrap items-center gap-2">
-                  <input
-                    type="text"
-                    value={e.name}
-                    onChange={(ev) => updateExpenseRow(e.id, { name: ev.target.value })}
-                    onBlur={(ev) => saveExpenseRow(e.id, { name: ev.target.value })}
-                    placeholder="Expense name"
-                    className="min-w-0 w-full sm:w-auto sm:flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-brand-400 focus:bg-white/10"
-                  />
-                  <DatePicker
-                    value={e.date}
-                    onChange={(d) => { updateExpenseRow(e.id, { date: d }); saveExpenseRow(e.id, { date: d }) }}
-                    className="flex-1 sm:w-44 sm:flex-none"
-                  />
-                  <input
-                    type="number"
-                    value={e.amount}
-                    onChange={(ev) => updateExpenseRow(e.id, { amount: ev.target.value })}
-                    onBlur={(ev) => saveExpenseRow(e.id, { amount: ev.target.value })}
-                    placeholder="0"
-                    className="w-24 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-right text-sm text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-brand-400 focus:bg-white/10"
-                  />
+                <div key={e.id} className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="truncate text-sm text-slate-100">{e.name || 'Expense'}</span>
+                      {e.recurring && (
+                        <span className="shrink-0 rounded-full bg-brand-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-200">Monthly</span>
+                      )}
+                    </div>
+                    <div className="text-xs text-slate-500">
+                      {e.recurring
+                        ? (view === 'all' ? `Since ${shortMonth(e.date)} · ${e._months} mo` : 'Recurring monthly')
+                        : shortDate(e.date)}
+                    </div>
+                  </div>
+                  <span className="shrink-0 text-sm font-medium text-rose-300">-{fmtUSD(e._amount)}</span>
                   <button
                     onClick={() => removeExpenseRow(e.id)}
                     aria-label="Delete expense"
-                    className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/5 text-slate-400 transition hover:border-rose-500/40 hover:bg-rose-500/10 hover:text-rose-300"
+                    className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/5 text-slate-400 transition hover:border-rose-500/40 hover:bg-rose-500/10 hover:text-rose-300"
                   >
                     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M3 6h18" />
@@ -874,6 +939,23 @@ function parseISO(s) {
   const [y, m, d] = s.split('-').map(Number)
   if (!y || !m || !d) return null
   return { y, m: m - 1, d }
+}
+
+// Months from one 'YYYY-MM' key to another, inclusive of both ends.
+function monthsInclusive(startKey, endKey) {
+  const [sy, sm] = startKey.split('-').map(Number)
+  const [ey, em] = endKey.split('-').map(Number)
+  return (ey - sy) * 12 + (em - sm) + 1
+}
+
+function shortDate(iso) {
+  const p = parseISO(iso)
+  return p ? `${MONTHS[p.m].slice(0, 3)} ${p.d}, ${p.y}` : ''
+}
+
+function shortMonth(iso) {
+  const p = parseISO(iso)
+  return p ? `${MONTHS[p.m].slice(0, 3)} ${p.y}` : ''
 }
 
 function DatePicker({ value, onChange, className = '' }) {

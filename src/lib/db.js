@@ -27,7 +27,13 @@ function accountFromRow(r) {
 }
 
 const payoutFromRow = (r) => ({ id: r.id, date: r.date, amount: Number(r.amount) })
-const expenseFromRow = (r) => ({ id: r.id, name: r.name, amount: Number(r.amount), date: r.date })
+const expenseFromRow = (r) => ({
+  id: r.id,
+  name: r.name,
+  amount: Number(r.amount),
+  date: r.date,
+  recurring: Boolean(r.recurring),
+})
 
 function accountToRow(userId, data) {
   return {
@@ -116,10 +122,16 @@ export async function replacePayouts(userId, accountId, payouts) {
 }
 
 // --- expenses -------------------------------------------------------------
-export async function createExpense(userId, date) {
+export async function createExpense(userId, { name, amount, date, recurring }) {
   const { data, error } = await supabase
     .from('business_expenses')
-    .insert({ user_id: userId, name: '', amount: 0, date: date || null })
+    .insert({
+      user_id: userId,
+      name: name ?? '',
+      amount: Number(amount) || 0,
+      date: date || null,
+      recurring: Boolean(recurring),
+    })
     .select()
     .single()
   if (error) throw error
