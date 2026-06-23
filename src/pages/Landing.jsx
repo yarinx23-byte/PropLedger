@@ -34,6 +34,7 @@ export default function Landing() {
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <Logo />
         <nav className="flex items-center gap-3">
+          <Link to="/pricing" className="hidden text-sm text-slate-300 transition hover:text-white sm:inline">Pricing</Link>
           <Link to="/login" className="text-sm text-slate-300 transition hover:text-white">Log in</Link>
           <Link
             to="/signup"
