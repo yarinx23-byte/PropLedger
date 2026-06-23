@@ -119,8 +119,11 @@ export default function Pricing() {
               BEST VALUE
             </div>
             <h2 className="text-xl font-bold mb-2">Annual</h2>
-            <div className="text-4xl font-bold mb-1">$149<span className="text-lg text-gray-400">/yr</span></div>
-            <p className="text-gray-400 text-sm mb-6">Save $79 vs monthly</p>
+            <div className="mb-1 flex items-baseline gap-2">
+              <span className="text-4xl font-bold">$149<span className="text-lg text-gray-400">/yr</span></span>
+              <span className="text-lg text-gray-500 line-through">$228</span>
+            </div>
+            <p className="text-emerald-400 text-sm font-medium mb-6">Save $79 a year (35% off)</p>
             <ul className="space-y-2 text-sm text-gray-300 mb-8">
               <li>✓ Unlimited trades</li>
               <li>✓ All analytics</li>
