@@ -1,4 +1,5 @@
 import { initializePaddle } from '@paddle/paddle-js'
+import { track } from '@vercel/analytics'
 
 let paddleInstance = null
 
@@ -13,6 +14,7 @@ export async function getPaddle() {
       // user to our post-checkout page, which waits for the subscription to
       // activate and then forwards to the dashboard.
       if (event?.name === 'checkout.completed') {
+        track('checkout_completed')
         window.location.assign('/welcome')
       }
     },

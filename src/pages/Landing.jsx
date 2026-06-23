@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { track } from '@vercel/analytics'
 import Logo from '../components/Logo.jsx'
 import LegalLinks from '../components/LegalLinks.jsx'
 
@@ -38,6 +39,7 @@ export default function Landing() {
           <Link to="/login" className="text-sm text-slate-300 transition hover:text-white">Log in</Link>
           <Link
             to="/signup"
+            onClick={() => track('cta_click', { location: 'nav' })}
             className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-[0_0_30px_-6px_rgba(139,92,246,0.7)] transition hover:bg-brand-500"
           >
             Get started
@@ -68,6 +70,7 @@ export default function Landing() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 to="/signup"
+                onClick={() => track('cta_click', { location: 'hero' })}
                 className="inline-flex items-center rounded-xl bg-brand-600 px-6 py-3 font-semibold text-white shadow-[0_0_40px_-8px_rgba(139,92,246,0.7)] transition hover:bg-brand-500 active:translate-y-px"
               >
                 Start tracking free
@@ -126,6 +129,7 @@ export default function Landing() {
           </div>
           <Link
             to="/signup"
+            onClick={() => track('cta_click', { location: 'cta_strip' })}
             className="shrink-0 rounded-xl bg-brand-600 px-6 py-3 font-semibold text-white shadow-[0_0_30px_-6px_rgba(139,92,246,0.7)] transition hover:bg-brand-500"
           >
             Create free account

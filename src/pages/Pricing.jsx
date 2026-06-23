@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { track } from '@vercel/analytics'
 import { getPaddle, PRICES } from '../lib/paddle'
 import { useAuth } from '../context/AuthContext'
 import LegalLinks from '../components/LegalLinks.jsx'
@@ -34,6 +35,7 @@ export default function Pricing() {
   const pad = (n) => String(n).padStart(2, '0')
 
   async function handleCheckout(priceId, planName) {
+    track('checkout_start', { plan: planName, loggedIn: Boolean(user) })
     if (!user) {
       navigate('/signup')
       return

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { track } from '@vercel/analytics'
 import Logo from '../components/Logo.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 
@@ -24,6 +25,7 @@ export default function Signup() {
     setBusy(true)
     try {
       const { needsConfirmation } = await signUp(email, password)
+      track('signup', { needsConfirmation })
       if (needsConfirmation) {
         setNotice('Check your inbox to confirm your email, then log in.')
       } else {
