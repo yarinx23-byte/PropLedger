@@ -17,7 +17,22 @@ const features = [
   {
     icon: '🎯',
     title: 'Tracked. Organized. Tax ready.',
-    body: 'Stop reconstructing your year from memory. Every expense and payout is tracked from day one.',
+    body: 'Stop reconstructing your year from memory. Log every expense and payout from day one.',
+  },
+]
+
+const steps = [
+  {
+    title: 'Add your accounts',
+    body: 'Add each funded account in seconds - firm, size, fees, and payout split. Buy a few at once? Add them in one go.',
+  },
+  {
+    title: 'Log payouts & expenses',
+    body: 'Record every payout, reset, and business expense as they happen. Mark recurring costs once and they repeat monthly.',
+  },
+  {
+    title: 'See your real net profit',
+    body: 'PropLedger does the math - your true net profit after every fee and split, filtered by month or all-time.',
   },
 ]
 
@@ -115,6 +130,23 @@ export default function Landing() {
               <p className="mt-2 text-sm text-slate-400">{f.body}</p>
             </div>
           ))}
+        </section>
+
+        {/* How it works */}
+        <section className="py-8 md:py-14">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">How it works</h2>
+            <p className="mt-3 text-slate-400">No integrations, no spreadsheets - just three quick steps.</p>
+          </div>
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {steps.map((s, i) => (
+              <div key={s.title} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur">
+                <div className="grid h-11 w-11 place-items-center rounded-xl bg-brand-500/15 text-lg font-bold text-brand-200">{i + 1}</div>
+                <h3 className="mt-4 text-lg font-semibold text-white">{s.title}</h3>
+                <p className="mt-2 text-sm text-slate-400">{s.body}</p>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* CTA strip */}
