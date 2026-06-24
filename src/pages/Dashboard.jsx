@@ -202,7 +202,7 @@ export default function Dashboard() {
     <div className="min-h-screen">
       {/* Header */}
       <header className="border-b border-white/5 bg-slate-950/60 backdrop-blur sticky top-0 z-10">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 py-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-4">
           <Logo />
           <div className="flex items-center gap-3">
             <span className="hidden text-sm text-slate-400 sm:inline">{user?.email}</span>
@@ -222,7 +222,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 sm:px-6 py-8">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
         {/* Page title */}
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
@@ -324,17 +324,17 @@ export default function Dashboard() {
               <table className="w-full text-sm whitespace-nowrap">
                 <thead className="bg-white/[0.03] text-left text-xs uppercase tracking-wider text-slate-400">
                   <tr>
-                    <th className="px-4 py-3">Firm</th>
-                    <th className="px-4 py-3">Size</th>
-                    <th className="px-4 py-3">Status</th>
-                    <th className="px-4 py-3">Purchased</th>
-                    <th className="px-4 py-3 text-right">Challenge</th>
-                    <th className="px-4 py-3 text-right">Activation</th>
-                    <th className="px-4 py-3 text-right">Payout fees</th>
-                    <th className="px-4 py-3 text-right">Reset</th>
-                    <th className="px-4 py-3 text-right">Payouts</th>
-                    <th className="px-4 py-3 text-right">Net</th>
-                    <th className="px-4 py-3 text-right"></th>
+                    <th className="px-3 py-3">Firm</th>
+                    <th className="px-3 py-3">Size</th>
+                    <th className="px-3 py-3">Status</th>
+                    <th className="px-3 py-3">Purchased</th>
+                    <th className="px-3 py-3 text-right">Challenge</th>
+                    <th className="px-3 py-3 text-right">Activation</th>
+                    <th className="px-3 py-3 text-right">Payout fees</th>
+                    <th className="px-3 py-3 text-right">Reset</th>
+                    <th className="px-3 py-3 text-right">Payouts</th>
+                    <th className="px-3 py-3 text-right">Net</th>
+                    <th className="px-3 py-3 text-right"></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
@@ -347,9 +347,9 @@ export default function Dashboard() {
                   )}
                   {visibleAccounts.map((a) => (
                     <tr key={a.id} className="transition hover:bg-white/[0.02]">
-                      <td className="px-4 py-4 font-medium text-white">{a.firm}</td>
-                      <td className="px-4 py-4 text-slate-300">{fmtUSD(a.size)}</td>
-                      <td className="px-4 py-4">
+                      <td className="px-3 py-4 font-medium text-white">{a.firm}</td>
+                      <td className="px-3 py-4 text-slate-300">{fmtUSD(a.size)}</td>
+                      <td className="px-3 py-4">
                         <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                           a.status === 'Funded'
                             ? 'bg-emerald-500/15 text-emerald-300'
@@ -360,18 +360,18 @@ export default function Dashboard() {
                           {a.status}
                         </span>
                       </td>
-                      <td className="px-4 py-4 text-slate-400">{shortDate(a.purchaseDate) || '-'}</td>
+                      <td className="px-3 py-4 text-slate-400">{shortDate(a.purchaseDate) || '-'}</td>
                       <Cost value={a._challenge} />
                       <Cost value={a._activation} />
                       <Cost value={a._payoutFees} />
                       <Cost value={a._reset} />
-                      <td className="px-4 py-4 text-right text-emerald-300">
+                      <td className="px-3 py-4 text-right text-emerald-300">
                         {a._payouts ? `+${fmtUSD(a._payouts)}` : '-'}
                       </td>
-                      <td className={`px-4 py-4 text-right font-semibold ${a._net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                      <td className={`px-3 py-4 text-right font-semibold ${a._net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                         {fmtUSDSigned(a._net)}
                       </td>
-                      <td className="px-4 py-4 text-right">
+                      <td className="px-3 py-4 text-right">
                         <button
                           onClick={() => setEditing(a)}
                           aria-label={`Edit ${a.firm}`}
@@ -518,7 +518,7 @@ export default function Dashboard() {
         )}
       </main>
 
-      <footer className="mx-auto max-w-6xl border-t border-white/5 px-4 sm:px-6 py-8 text-center text-sm text-slate-500">
+      <footer className="mx-auto max-w-7xl border-t border-white/5 px-4 sm:px-6 py-8 text-center text-sm text-slate-500">
         <LegalLinks className="mb-4" />
         © {new Date().getFullYear()} PropLedger. Built for funded traders.
       </footer>
@@ -562,7 +562,7 @@ export default function Dashboard() {
 
 function Cost({ value }) {
   return (
-    <td className="px-4 py-4 text-right text-slate-300">
+    <td className="px-3 py-4 text-right text-slate-300">
       {value ? `-${fmtUSD(value)}` : '-'}
     </td>
   )
@@ -832,7 +832,7 @@ function AccountModal({ initial, onClose, onSubmit, onDelete }) {
             </div>
             <div className="space-y-2">
               {payouts.length === 0 && (
-                <p className="rounded-xl border border-dashed border-white/10 px-4 py-4 text-center text-sm text-slate-500">
+                <p className="rounded-xl border border-dashed border-white/10 px-3 py-4 text-center text-sm text-slate-500">
                   No payouts yet.
                 </p>
               )}
