@@ -65,7 +65,7 @@ export default function Landing() {
               Built by prop traders, for prop traders - because spreadsheets weren't cutting it.
             </p>
             <p className="mt-4 max-w-lg text-lg text-slate-300">
-              PropLedger tracks challenge fees, payouts, resets, and business expenses across every prop firm - so you know exactly what you're really making.
+              PropLedger helps you track challenge fees, payouts, resets, and business expenses across every prop firm - so you know exactly what you're really making.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
