@@ -77,11 +77,15 @@ export default function Dashboard() {
     })
   }, [accounts, view, key])
 
-  // Closed accounts sink to the bottom; active ones (In challenge / Funded)
-  // stay on top in their existing order (Array.sort is stable).
+  // Closed accounts sink to the bottom; within each group, newest purchase
+  // first (ISO date strings compare chronologically).
   const visibleAccounts = derived
     .filter((a) => a._active)
-    .sort((x, y) => (x.status === 'Closed' ? 1 : 0) - (y.status === 'Closed' ? 1 : 0))
+    .sort((x, y) => {
+      const byStatus = (x.status === 'Closed' ? 1 : 0) - (y.status === 'Closed' ? 1 : 0)
+      if (byStatus !== 0) return byStatus
+      return (y.purchaseDate || '').localeCompare(x.purchaseDate || '')
+    })
 
   // Recurring (monthly) expenses count in every month from their start date.
   const nowKey = monthKey(now.getFullYear(), now.getMonth())
