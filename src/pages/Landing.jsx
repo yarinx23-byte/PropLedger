@@ -12,7 +12,7 @@ const features = [
   {
     icon: '📈',
     title: 'All your prop firms. One clean dashboard.',
-    body: 'Works with every prop firm. Tracks every dollar.',
+    body: 'Add accounts from any prop firm - FTMO, Apex, TopStep and more - and see them side by side.',
   },
   {
     icon: '🎯',
@@ -51,11 +51,7 @@ export default function Landing() {
         {/* Hero */}
         <section className="grid items-center gap-8 py-6 sm:py-8 lg:gap-12 lg:py-12 lg:grid-cols-2">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-brand-400/30 bg-brand-500/10 px-3 py-1 text-xs font-medium text-brand-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-brand-400" />
-              P&amp;L tracking for prop traders
-            </span>
-            <h1 className="mt-6 text-5xl font-extrabold leading-tight tracking-tight md:text-6xl text-white">
+            <h1 className="text-5xl font-extrabold leading-tight tracking-tight md:text-6xl text-white">
               Your funded accounts,
               <span className="block bg-linear-to-r from-brand-300 via-brand-400 to-brand-600 bg-clip-text text-transparent">
                 finally in one ledger.
