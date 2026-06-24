@@ -77,12 +77,13 @@ export default function Dashboard() {
     })
   }, [accounts, view, key])
 
-  // Closed accounts sink to the bottom; within each group, newest purchase
-  // first (ISO date strings compare chronologically).
+  // Order by status (Funded -> In challenge -> Closed), then newest purchase
+  // first within each group (ISO date strings compare chronologically).
+  const statusRank = { Funded: 0, 'In challenge': 1, Closed: 2 }
   const visibleAccounts = derived
     .filter((a) => a._active)
     .sort((x, y) => {
-      const byStatus = (x.status === 'Closed' ? 1 : 0) - (y.status === 'Closed' ? 1 : 0)
+      const byStatus = (statusRank[x.status] ?? 1) - (statusRank[y.status] ?? 1)
       if (byStatus !== 0) return byStatus
       return (y.purchaseDate || '').localeCompare(x.purchaseDate || '')
     })
