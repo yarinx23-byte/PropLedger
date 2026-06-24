@@ -66,8 +66,8 @@ function welcomeHtml(): string {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:32px 16px;">
       <tr><td align="center">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
-          <tr><td style="background:linear-gradient(135deg,#ec4899,#7c3aed);padding:28px 32px;">
-            <div style="font-size:24px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;">PropLedger</div>
+          <tr><td style="background:#0f172a;padding:24px 32px;">
+            <img src="${APP_URL}/email-logo.png" alt="PropLedger" width="180" style="display:block;border:0;width:180px;max-width:180px;height:auto;" />
           </td></tr>
           <tr><td style="padding:36px 32px 8px;">
             <h1 style="margin:0 0 12px;font-size:24px;font-weight:800;letter-spacing:-0.5px;">You're in. Welcome aboard! 🎉</h1>
