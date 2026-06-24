@@ -9,6 +9,21 @@ const supabase = createClient(
 const PADDLE_API_KEY = Deno.env.get('PADDLE_API_KEY')
 const PADDLE_API_BASE = Deno.env.get('PADDLE_API_BASE') || 'https://api.paddle.com'
 const PADDLE_WEBHOOK_SECRET = Deno.env.get('PADDLE_WEBHOOK_SECRET')
+const DISCORD_WEBHOOK_URL = Deno.env.get('DISCORD_WEBHOOK_URL')
+
+// Best-effort Discord ping (never blocks/breaks the webhook).
+async function notifyDiscord(message: string) {
+  if (!DISCORD_WEBHOOK_URL) return
+  try {
+    await fetch(DISCORD_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: 'PropLedger', content: message }),
+    })
+  } catch (e) {
+    console.error('Discord notify failed', e)
+  }
+}
 
 // Verify the Paddle-Signature header (HMAC-SHA256 of `${ts}:${rawBody}`).
 // Returns true if no secret is configured yet, so deploying this code does not
@@ -95,8 +110,9 @@ serve(async (req) => {
 
     // Resolve the user: custom_data.user_id first, then email via Paddle API.
     let userId: string | null = data.custom_data?.user_id ?? null
+    let email: string | null = null
     if (!userId && customerId) {
-      const email = await emailFromCustomer(customerId)
+      email = await emailFromCustomer(customerId)
       if (email) userId = await userIdFromEmail(email)
     }
 
@@ -121,6 +137,12 @@ serve(async (req) => {
         updated_at: new Date().toISOString(),
       }, { onConflict: 'paddle_subscription_id' })
       if (error) throw error
+    }
+
+    // Ping Discord when a brand-new subscription is created (a new customer).
+    if (eventType === 'subscription.created') {
+      if (!email && customerId) email = await emailFromCustomer(customerId)
+      await notifyDiscord(`💰 **New subscriber!**\n📧 ${email ?? 'unknown'}\n📋 ${plan} · ${status}`)
     }
 
     if (eventType === 'subscription.canceled') {
