@@ -633,6 +633,74 @@ const PROP_FIRMS = [
   'Funding Traders', 'Blueberry Funded',
 ]
 
+// Themed type-ahead for the Firm field. Suggestions appear only once the user
+// starts typing (not on focus), and the dropdown matches the app's dark UI.
+function FirmAutocomplete({ value, onChange, className }) {
+  const [open, setOpen] = useState(false)
+  const [active, setActive] = useState(-1)
+
+  const q = value.trim().toLowerCase()
+  const matches = useMemo(() => {
+    if (!q) return []
+    const starts = []
+    const includes = []
+    for (const name of PROP_FIRMS) {
+      const n = name.toLowerCase()
+      if (n === q) continue // already typed in full - nothing to suggest
+      if (n.startsWith(q)) starts.push(name)
+      else if (n.includes(q)) includes.push(name)
+    }
+    return [...starts, ...includes].slice(0, 8)
+  }, [q])
+
+  const showList = open && matches.length > 0
+
+  function choose(name) {
+    onChange(name)
+    setOpen(false)
+    setActive(-1)
+  }
+
+  function onKeyDown(e) {
+    if (!showList) return
+    if (e.key === 'ArrowDown') { e.preventDefault(); setActive((i) => Math.min(i + 1, matches.length - 1)) }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setActive((i) => Math.max(i - 1, 0)) }
+    else if (e.key === 'Enter' && active >= 0) { e.preventDefault(); choose(matches[active]) }
+    else if (e.key === 'Escape') { setOpen(false); setActive(-1) }
+  }
+
+  return (
+    <div className="relative">
+      <input
+        className={className}
+        value={value}
+        onChange={(e) => { onChange(e.target.value); setOpen(true); setActive(-1) }}
+        onBlur={() => setTimeout(() => setOpen(false), 120)}
+        onKeyDown={onKeyDown}
+        placeholder="FTMO, Apex, TopStep…"
+        autoComplete="off"
+        required
+      />
+      {showList && (
+        <ul className="absolute z-10 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-white/10 bg-slate-800 py-1 shadow-xl">
+          {matches.map((name, i) => (
+            <li key={name}>
+              <button
+                type="button"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => choose(name)}
+                className={`block w-full px-4 py-2 text-left text-sm text-slate-200 transition hover:bg-white/10 ${i === active ? 'bg-white/10' : ''}`}
+              >
+                {name}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
+
 function AccountModal({ initial, onClose, onSubmit, onDelete }) {
   const isEdit = Boolean(initial)
   const [firm, setFirm] = useState(initial?.firm ?? '')
@@ -721,18 +789,7 @@ function AccountModal({ initial, onClose, onSubmit, onDelete }) {
         <h3 className="text-xl font-bold text-white">{isEdit ? 'Edit funded account' : 'Add funded account'}</h3>
         <form onSubmit={submit} className="mt-5 grid gap-4 sm:grid-cols-2">
           <Field className="sm:col-span-2" label="Firm">
-            <input
-              className={inputCls}
-              value={firm}
-              onChange={(e) => setFirm(e.target.value)}
-              placeholder="FTMO, Apex, TopStep…"
-              list="prop-firm-suggestions"
-              autoComplete="off"
-              required
-            />
-            <datalist id="prop-firm-suggestions">
-              {PROP_FIRMS.map((name) => <option key={name} value={name} />)}
-            </datalist>
+            <FirmAutocomplete value={firm} onChange={setFirm} className={inputCls} />
           </Field>
           <Field label="Account size">
             <Select value={size} onChange={setSize} options={['$25,000', '$50,000', '$100,000', '$150,000', '$200,000']} />
