@@ -615,6 +615,24 @@ function EmptyDashboard({ onAdd }) {
   )
 }
 
+// Known prop firms, offered as type-ahead suggestions on the Firm field.
+// Free text is still allowed - this only standardizes the common names.
+const PROP_FIRMS = [
+  // Futures
+  'Apex Trader Funding', 'Topstep', 'Take Profit Trader', 'MyFundedFutures',
+  'Tradeify', 'Bulenox', 'Elite Trader Funding', 'TradeDay', 'Earn2Trade',
+  'Leeloo Trading', 'UProfit', 'Funded Futures Network', 'Legends Trading',
+  'Phidias Propfirm', 'Blue Guardian Futures', 'Lucid Trading', 'The Trading Pit',
+  'Aqua Funded', 'NexGen Futures', 'Goat Funded Futures', 'Alpha Futures',
+  'OneUp Trader', 'Atlas Funded',
+  // Forex / CFD
+  'FTMO', 'The5ers', 'FundedNext', 'Funding Pips', 'E8 Markets',
+  'Alpha Capital Group', 'The Funded Trader', 'FunderPro', 'Maven Trading',
+  'BrightFunded', 'Hola Prime', 'Instant Funding', 'Breakout',
+  'City Traders Imperium', 'Audacity Capital', 'ToptierTrader', 'FXIFY',
+  'Funding Traders', 'Blueberry Funded',
+]
+
 function AccountModal({ initial, onClose, onSubmit, onDelete }) {
   const isEdit = Boolean(initial)
   const [firm, setFirm] = useState(initial?.firm ?? '')
@@ -703,7 +721,18 @@ function AccountModal({ initial, onClose, onSubmit, onDelete }) {
         <h3 className="text-xl font-bold text-white">{isEdit ? 'Edit funded account' : 'Add funded account'}</h3>
         <form onSubmit={submit} className="mt-5 grid gap-4 sm:grid-cols-2">
           <Field className="sm:col-span-2" label="Firm">
-            <input className={inputCls} value={firm} onChange={(e) => setFirm(e.target.value)} placeholder="FTMO, Apex, TopStep…" required />
+            <input
+              className={inputCls}
+              value={firm}
+              onChange={(e) => setFirm(e.target.value)}
+              placeholder="FTMO, Apex, TopStep…"
+              list="prop-firm-suggestions"
+              autoComplete="off"
+              required
+            />
+            <datalist id="prop-firm-suggestions">
+              {PROP_FIRMS.map((name) => <option key={name} value={name} />)}
+            </datalist>
           </Field>
           <Field label="Account size">
             <Select value={size} onChange={setSize} options={['$25,000', '$50,000', '$100,000', '$150,000', '$200,000']} />
