@@ -22,6 +22,7 @@ export default function Dashboard() {
   const [showAdd, setShowAdd] = useState(false)
   const [editing, setEditing] = useState(null)
   const [confirmSignOut, setConfirmSignOut] = useState(false)
+  const [showClosed, setShowClosed] = useState(false)
   const [expDraft, setExpDraft] = useState(() => ({ name: '', amount: '', date: todayISO(), recurring: false }))
 
   useEffect(() => {
@@ -87,6 +88,11 @@ export default function Dashboard() {
       if (byStatus !== 0) return byStatus
       return (y.purchaseDate || '').localeCompare(x.purchaseDate || '')
     })
+
+  // Closed accounts are collapsed behind a toggle so a long history of failed
+  // accounts doesn't bury the active ones (and the totals/expenses below).
+  const activeAccounts = visibleAccounts.filter((a) => a.status !== 'Closed')
+  const closedAccounts = visibleAccounts.filter((a) => a.status === 'Closed')
 
   // Recurring (monthly) expenses count in every month from their start date.
   const nowKey = monthKey(now.getFullYear(), now.getMonth())
@@ -350,45 +356,27 @@ export default function Dashboard() {
                       </td>
                     </tr>
                   )}
-                  {visibleAccounts.map((a) => (
-                    <tr key={a.id} className="transition hover:bg-white/[0.02]">
-                      <td className="px-3 py-4 font-medium text-white">{a.firm}</td>
-                      <td className="px-3 py-4 text-slate-300">{fmtUSD(a.size)}</td>
-                      <td className="px-3 py-4">
-                        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                          a.status === 'Funded'
-                            ? 'bg-emerald-500/15 text-emerald-300'
-                            : a.status === 'Closed'
-                            ? 'bg-rose-500/15 text-rose-300'
-                            : 'bg-amber-500/15 text-amber-300'
-                        }`}>
-                          {a.status}
-                        </span>
-                      </td>
-                      <td className="px-3 py-4 text-slate-400">{shortDate(a.purchaseDate) || '-'}</td>
-                      <Cost value={a._challenge} />
-                      <Cost value={a._activation} />
-                      <Cost value={a._payoutFees} />
-                      <Cost value={a._reset} />
-                      <td className="px-3 py-4 text-right text-emerald-300">
-                        {a._payouts ? `+${fmtUSD(a._payouts)}` : '-'}
-                      </td>
-                      <td className={`px-3 py-4 text-right font-semibold ${a._net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                        {fmtUSDSigned(a._net)}
-                      </td>
-                      <td className="px-3 py-4 text-right">
+                  {activeAccounts.map((a) => (
+                    <AccountRow key={a.id} a={a} onEdit={setEditing} />
+                  ))}
+                  {closedAccounts.length > 0 && (
+                    <tr className="bg-white/[0.02]">
+                      <td colSpan={11} className="px-3 py-2.5">
                         <button
-                          onClick={() => setEditing(a)}
-                          aria-label={`Edit ${a.firm}`}
-                          className="inline-grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/5 text-slate-400 transition hover:border-brand-400/40 hover:bg-brand-500/10 hover:text-brand-200"
+                          type="button"
+                          onClick={() => setShowClosed((v) => !v)}
+                          className="flex items-center gap-2 text-sm font-medium text-slate-400 transition hover:text-slate-200"
                         >
-                          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M12 20h9" />
-                            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                          <svg viewBox="0 0 24 24" className={`h-4 w-4 transition-transform ${showClosed ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M9 18l6-6-6-6" />
                           </svg>
+                          {showClosed ? 'Hide' : 'Show'} closed accounts ({closedAccounts.length})
                         </button>
                       </td>
                     </tr>
+                  )}
+                  {showClosed && closedAccounts.map((a) => (
+                    <AccountRow key={a.id} a={a} onEdit={setEditing} />
                   ))}
                 </tbody>
               </table>
@@ -570,6 +558,49 @@ function Cost({ value }) {
     <td className="px-3 py-4 text-right text-slate-300">
       {value ? `-${fmtUSD(value)}` : '-'}
     </td>
+  )
+}
+
+function AccountRow({ a, onEdit }) {
+  return (
+    <tr className="transition hover:bg-white/[0.02]">
+      <td className="px-3 py-4 font-medium text-white">{a.firm}</td>
+      <td className="px-3 py-4 text-slate-300">{fmtUSD(a.size)}</td>
+      <td className="px-3 py-4">
+        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+          a.status === 'Funded'
+            ? 'bg-emerald-500/15 text-emerald-300'
+            : a.status === 'Closed'
+            ? 'bg-rose-500/15 text-rose-300'
+            : 'bg-amber-500/15 text-amber-300'
+        }`}>
+          {a.status}
+        </span>
+      </td>
+      <td className="px-3 py-4 text-slate-400">{shortDate(a.purchaseDate) || '-'}</td>
+      <Cost value={a._challenge} />
+      <Cost value={a._activation} />
+      <Cost value={a._payoutFees} />
+      <Cost value={a._reset} />
+      <td className="px-3 py-4 text-right text-emerald-300">
+        {a._payouts ? `+${fmtUSD(a._payouts)}` : '-'}
+      </td>
+      <td className={`px-3 py-4 text-right font-semibold ${a._net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+        {fmtUSDSigned(a._net)}
+      </td>
+      <td className="px-3 py-4 text-right">
+        <button
+          onClick={() => onEdit(a)}
+          aria-label={`Edit ${a.firm}`}
+          className="inline-grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/5 text-slate-400 transition hover:border-brand-400/40 hover:bg-brand-500/10 hover:text-brand-200"
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 20h9" />
+            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+          </svg>
+        </button>
+      </td>
+    </tr>
   )
 }
 
