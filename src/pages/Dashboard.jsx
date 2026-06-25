@@ -712,10 +712,12 @@ function AccountModal({ initial, onClose, onSubmit, onDelete }) {
   const [size, setSize] = useState(fmtUSD(initial?.size ?? 100000))
   const [status, setStatus] = useState(initial?.status ?? 'In challenge')
   const [purchaseDate, setPurchaseDate] = useState(initial?.purchaseDate ?? todayISO())
-  const [challengeFee, setChallengeFee] = useState(initial?.challengeFee ?? 540)
-  const [activationFee, setActivationFee] = useState(initial?.activationFee ?? 0)
+  // Fee fields start empty (showing a gray "0" placeholder) so the user can
+  // type straight away without clearing a pre-filled 0. Empty -> 0 on submit.
+  const [challengeFee, setChallengeFee] = useState(initial?.challengeFee ? String(initial.challengeFee) : '')
+  const [activationFee, setActivationFee] = useState(initial?.activationFee ? String(initial.activationFee) : '')
   const [payoutSplit, setPayoutSplit] = useState(initial?.payoutSplit ?? 90)
-  const [resetFee, setResetFee] = useState(initial?.resetFee ?? 0)
+  const [resetFee, setResetFee] = useState(initial?.resetFee ? String(initial.resetFee) : '')
   const [payouts, setPayouts] = useState(initial?.payouts ?? [])
   const [quantity, setQuantity] = useState(1)
 
@@ -724,7 +726,7 @@ function AccountModal({ initial, onClose, onSubmit, onDelete }) {
   const netTotal = grossTotal * split / 100
 
   function addPayout() {
-    setPayouts((prev) => [...prev, { id: Date.now(), date: todayISO(), amount: 0 }])
+    setPayouts((prev) => [...prev, { id: Date.now(), date: todayISO(), amount: '' }])
   }
   function updatePayout(id, patch) {
     setPayouts((prev) => prev.map((p) => (p.id === id ? { ...p, ...patch } : p)))
@@ -809,13 +811,13 @@ function AccountModal({ initial, onClose, onSubmit, onDelete }) {
             <input className={inputCls} type="number" min="0" max="100" value={payoutSplit} onChange={(e) => setPayoutSplit(e.target.value)} />
           </Field>
           <Field label="Challenge fee ($)" hint="One-time">
-            <input className={inputCls} type="number" value={challengeFee} onChange={(e) => setChallengeFee(e.target.value)} />
+            <input className={inputCls} type="number" placeholder="0" value={challengeFee} onChange={(e) => setChallengeFee(e.target.value)} />
           </Field>
           <Field label="Activation fee ($)" hint="One-time">
-            <input className={inputCls} type="number" value={activationFee} onChange={(e) => setActivationFee(e.target.value)} />
+            <input className={inputCls} type="number" placeholder="0" value={activationFee} onChange={(e) => setActivationFee(e.target.value)} />
           </Field>
           <Field label="Reset fee ($)" hint="Per reset">
-            <input className={inputCls} type="number" value={resetFee} onChange={(e) => setResetFee(e.target.value)} />
+            <input className={inputCls} type="number" placeholder="0" value={resetFee} onChange={(e) => setResetFee(e.target.value)} />
           </Field>
           {!isEdit && (
             <Field label="Quantity" hint="Identical copies" className="sm:col-span-2">
