@@ -66,7 +66,7 @@ export default function Landing() {
         {/* Hero */}
         <section className="grid items-center gap-8 py-6 sm:py-8 lg:gap-12 lg:py-12 lg:grid-cols-2">
           <div className="text-center">
-            <h1 className="text-5xl font-extrabold leading-tight tracking-tight md:text-6xl text-white">
+            <h1 className="whitespace-nowrap text-[clamp(1.3rem,6.5vw,2.5rem)] font-extrabold leading-tight tracking-tight text-white">
               Your funded accounts,
               <span className="block bg-linear-to-r from-brand-300 via-brand-400 to-brand-600 bg-clip-text text-transparent">
                 finally in one ledger.
