@@ -65,20 +65,20 @@ export default function Landing() {
       <main className="mx-auto max-w-6xl px-6">
         {/* Hero */}
         <section className="grid items-center gap-8 py-6 sm:py-8 lg:gap-12 lg:py-12 lg:grid-cols-2">
-          <div>
+          <div className="text-center">
             <h1 className="text-5xl font-extrabold leading-tight tracking-tight md:text-6xl text-white">
               Your funded accounts,
               <span className="block bg-linear-to-r from-brand-300 via-brand-400 to-brand-600 bg-clip-text text-transparent">
                 finally in one ledger.
               </span>
             </h1>
-            <p className="mt-5 max-w-lg text-base font-medium text-brand-200">
+            <p className="mt-5 mx-auto max-w-lg text-base font-medium text-brand-200">
               Built by prop traders, for prop traders - because spreadsheets weren't cutting it.
             </p>
-            <p className="mt-4 max-w-lg text-lg text-slate-300">
+            <p className="mt-4 mx-auto max-w-lg text-lg text-slate-300">
               PropLedger helps you track challenge fees, payouts, resets, and business expenses across every prop firm - so you know exactly what you're really making.
             </p>
-            <div className="mt-8 max-w-lg">
+            <div className="mt-8 mx-auto max-w-lg">
               <Link
                 to="/signup"
                 onClick={() => track('cta_click', { location: 'hero' })}
