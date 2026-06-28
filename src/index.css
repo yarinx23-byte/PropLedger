@@ -66,8 +66,20 @@ body {
   background-color: #020617;
   color: #f1f5f9;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Fixed, full-viewport gradient layer. We use a position:fixed pseudo-element
+   instead of `background-attachment: fixed`, which mobile browsers render
+   inconsistently - that mismatch made the background look like a different
+   shade on phones vs desktop. This renders identically everywhere. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: #020617;
   background-image:
     radial-gradient(circle at 15% 10%, rgba(124, 58, 237, 0.18), transparent 45%),
     radial-gradient(circle at 85% 90%, rgba(139, 92, 246, 0.12), transparent 40%);
-  background-attachment: fixed;
 }
