@@ -78,19 +78,13 @@ export default function Landing() {
             <p className="mt-4 max-w-lg text-lg text-slate-300">
               PropLedger helps you track challenge fees, payouts, resets, and business expenses across every prop firm - so you know exactly what you're really making.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8">
               <Link
                 to="/signup"
                 onClick={() => track('cta_click', { location: 'hero' })}
-                className="inline-flex items-center rounded-xl bg-brand-600 px-6 py-3 font-semibold text-white shadow-[0_0_40px_-8px_rgba(139,92,246,0.7)] transition hover:bg-brand-500 active:translate-y-px"
+                className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl bg-brand-600 px-12 py-4 text-lg font-semibold text-white shadow-[0_0_40px_-8px_rgba(139,92,246,0.7)] transition hover:bg-brand-500 active:translate-y-px"
               >
                 Start tracking free
-              </Link>
-              <Link
-                to="/login"
-                className="inline-flex items-center rounded-xl border border-white/10 bg-white/5 px-6 py-3 font-medium text-slate-100 transition hover:bg-white/10"
-              >
-                I have an account
               </Link>
             </div>
           </div>
