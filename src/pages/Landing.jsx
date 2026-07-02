@@ -52,14 +52,14 @@ const testimonials = [
   },
   {
     quote:
-      "I finally know my exact bottom line. Not profitable yet — but now I can actually see that changing soon!",
+      "I finally know my exact bottom line. Not profitable yet - but now I can actually see that changing soon!",
     name: 'George',
     context: 'Funded account trader',
   },
 ]
 
 const screenshots = [
-  { label: 'Dashboard — multi-account view' },
+  { label: 'Dashboard - multi-account view' },
   { label: 'Adding an expense' },
   { label: 'Monthly report' },
 ]
@@ -67,7 +67,7 @@ const screenshots = [
 const faqs = [
   {
     q: 'Is my trading data safe?',
-    a: 'Yes. PropLedger never connects to your trading or prop firm accounts. You log payouts and expenses manually — we never have access to your funds or trades. All data is encrypted and stored securely.',
+    a: 'Yes. PropLedger never connects to your trading or prop firm accounts. You log payouts and expenses manually - we never have access to your funds or trades. All data is encrypted and stored securely.',
   },
   {
     q: 'Do I need to connect my broker or prop firm?',
@@ -75,7 +75,7 @@ const faqs = [
   },
   {
     q: 'What happens after the free trial?',
-    a: "After 7 days you choose a plan to continue. No credit card is required for the trial, so you'll never be charged automatically.",
+    a: 'After 7 days you choose a plan to continue.',
   },
   {
     q: 'Can I cancel anytime?',
@@ -83,7 +83,7 @@ const faqs = [
   },
   {
     q: 'Which prop firms does it work with?',
-    a: 'All of them. FTMO, Apex, TopStep, MFF and any other firm — if you can log a payout and an expense, PropLedger can track it.',
+    a: 'All of them. FTMO, Apex, TopStep, MFF and any other firm - if you can log a payout and an expense, PropLedger can track it.',
   },
 ]
 
@@ -116,7 +116,7 @@ const mockAccounts = [
 ]
 
 export default function Landing() {
-  const [openFaq, setOpenFaq] = useState(0)
+  const [openFaq, setOpenFaq] = useState(null)
 
   return (
     <div className="min-h-screen">
@@ -164,7 +164,7 @@ export default function Landing() {
                 Start tracking free
               </Link>
               <p className="mt-4 text-xs text-slate-500">
-                From $12/mo · 7-day free trial · No credit card required
+                From $12/mo · 7-day free trial
               </p>
             </div>
           </div>
