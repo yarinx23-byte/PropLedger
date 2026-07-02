@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { track } from '@vercel/analytics'
 import Logo from '../components/Logo.jsx'
@@ -36,6 +37,77 @@ const steps = [
   },
 ]
 
+const testimonials = [
+  {
+    quote:
+      'I used to track all my funded accounts in a spreadsheet, but it got so tedious I basically abandoned it months ago. Here everything is just easier and clearer to follow.',
+    name: 'Dan',
+    context: 'Prop trader, multiple funded accounts',
+  },
+  {
+    quote:
+      "Beyond tracking the accounts themselves, the business expenses feature really helps me understand exactly where I stand. I've got a few subscriptions and two paid communities, so it makes a real difference.",
+    name: 'Ari',
+    context: 'Futures trader',
+  },
+  {
+    quote:
+      "I finally know my exact bottom line. Not profitable yet — but now I can actually see that changing soon!",
+    name: 'George',
+    context: 'Funded account trader',
+  },
+]
+
+const screenshots = [
+  { label: 'Dashboard — multi-account view' },
+  { label: 'Adding an expense' },
+  { label: 'Monthly report' },
+]
+
+const faqs = [
+  {
+    q: 'Is my trading data safe?',
+    a: 'Yes. PropLedger never connects to your trading or prop firm accounts. You log payouts and expenses manually — we never have access to your funds or trades. All data is encrypted and stored securely.',
+  },
+  {
+    q: 'Do I need to connect my broker or prop firm?',
+    a: "No, and that's by design. No API keys, no passwords, no account access. Just simple manual entry that takes seconds.",
+  },
+  {
+    q: 'What happens after the free trial?',
+    a: "After 7 days you choose a plan to continue. No credit card is required for the trial, so you'll never be charged automatically.",
+  },
+  {
+    q: 'Can I cancel anytime?',
+    a: 'Yes. Cancel in one click from your account settings. No lock-in, no questions asked.',
+  },
+  {
+    q: 'Which prop firms does it work with?',
+    a: 'All of them. FTMO, Apex, TopStep, MFF and any other firm — if you can log a payout and an expense, PropLedger can track it.',
+  },
+]
+
+function FaqItem({ faq, open, onToggle }) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+      >
+        <span className="font-semibold text-white">{faq.q}</span>
+        <span className={`shrink-0 text-brand-300 transition-transform duration-300 ${open ? 'rotate-45' : ''}`}>+</span>
+      </button>
+      <div className={`grid transition-all duration-300 ease-in-out ${open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
+        <div className="overflow-hidden">
+          <p className="px-6 pb-5 text-sm leading-relaxed text-slate-400">{faq.a}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const mockAccounts = [
   { label: 'FTMO 200K', val: '+$12,400', good: true },
   { label: 'Apex 150K', val: '+$8,200', good: true },
@@ -44,6 +116,8 @@ const mockAccounts = [
 ]
 
 export default function Landing() {
+  const [openFaq, setOpenFaq] = useState(0)
+
   return (
     <div className="min-h-screen">
       {/* Nav */}
@@ -78,6 +152,9 @@ export default function Landing() {
             <p className="mt-4 mx-auto max-w-lg text-lg text-slate-300">
               PropLedger helps you track challenge fees, payouts, resets, and business expenses across every prop firm - so you know exactly what you're really making.
             </p>
+            <p className="mt-3 mx-auto max-w-lg text-sm text-slate-400">
+              Built by a prop trader managing multiple funded accounts.
+            </p>
             <div className="mt-8 mx-auto max-w-lg">
               <Link
                 to="/signup"
@@ -86,6 +163,9 @@ export default function Landing() {
               >
                 Start tracking free
               </Link>
+              <p className="mt-4 text-xs text-slate-500">
+                From $12/mo · 7-day free trial · No credit card required
+              </p>
             </div>
           </div>
 
@@ -126,6 +206,27 @@ export default function Landing() {
           ))}
         </section>
 
+        {/* App screenshots */}
+        <section className="py-8 md:py-14">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">See it in action</h2>
+            <p className="mt-3 text-slate-400">A clear picture of every account, expense, and month - at a glance.</p>
+          </div>
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {screenshots.map((s) => (
+              <figure key={s.label}>
+                <div className="relative">
+                  <div className="absolute -inset-3 rounded-3xl bg-linear-to-br from-brand-600/20 to-transparent blur-xl" />
+                  <div className="relative flex aspect-[16/10] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur">
+                    <span className="px-4 text-center text-sm text-slate-500">Screenshot coming soon</span>
+                  </div>
+                </div>
+                <figcaption className="mt-3 text-center text-sm text-slate-400">{s.label}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
         {/* How it works */}
         <section className="py-8 md:py-14">
           <div className="text-center">
@@ -143,6 +244,26 @@ export default function Landing() {
           </div>
         </section>
 
+        {/* Testimonials */}
+        <section className="py-8 md:py-14">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">Traders are already switching</h2>
+            <p className="mt-3 text-slate-400">From abandoned spreadsheets to a ledger that actually gets used.</p>
+          </div>
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {testimonials.map((t) => (
+              <figure key={t.name} className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur">
+                <div className="text-2xl text-brand-400">"</div>
+                <blockquote className="mt-2 flex-1 text-sm leading-relaxed text-slate-300">{t.quote}</blockquote>
+                <figcaption className="mt-6 border-t border-white/5 pt-4">
+                  <div className="font-semibold text-white">{t.name}</div>
+                  <div className="text-xs text-slate-500">{t.context}</div>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
         {/* CTA strip */}
         <section className="mt-4 mb-10 md:my-12 flex flex-col items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-6 md:p-8 text-center backdrop-blur md:flex-row md:justify-between md:text-left">
           <div>
@@ -156,6 +277,21 @@ export default function Landing() {
           >
             Create free account
           </Link>
+        </section>
+
+        {/* FAQ */}
+        <section className="pt-4 pb-12 md:pt-8 md:pb-16">
+          <h2 className="text-center text-3xl font-bold tracking-tight text-white md:text-4xl">Frequently asked questions</h2>
+          <div className="mx-auto mt-10 max-w-2xl space-y-3">
+            {faqs.map((faq, i) => (
+              <FaqItem
+                key={faq.q}
+                faq={faq}
+                open={openFaq === i}
+                onToggle={() => setOpenFaq(openFaq === i ? null : i)}
+              />
+            ))}
+          </div>
         </section>
       </main>
 
