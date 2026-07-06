@@ -117,6 +117,7 @@ const mockAccounts = [
 
 export default function Landing() {
   const [openFaq, setOpenFaq] = useState(null)
+  const [lightbox, setLightbox] = useState(null)
 
   return (
     <div className="min-h-screen">
@@ -215,12 +216,13 @@ export default function Landing() {
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {screenshots.map((s) => (
               <figure key={s.label}>
-                <div className="relative">
-                  <div className="absolute -inset-3 rounded-3xl bg-linear-to-br from-brand-600/20 to-transparent blur-xl" />
-                  <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur">
-                    <img src={s.src} alt={s.label} loading="lazy" className="h-full w-full object-cover object-top" />
+                <button type="button" onClick={() => setLightbox(s.src)} className="group relative block w-full">
+                  <div className="absolute -inset-3 rounded-3xl bg-linear-to-br from-brand-600/20 to-transparent blur-xl transition group-hover:from-brand-600/40" />
+                  <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur transition duration-300 group-hover:-translate-y-1 group-hover:border-brand-400/40">
+                    <img src={s.src} alt={s.label} loading="lazy" className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105" />
+                    <span className="pointer-events-none absolute bottom-3 right-3 rounded-lg bg-black/50 px-2.5 py-1 text-xs font-medium text-white opacity-0 backdrop-blur transition group-hover:opacity-100">Click to expand</span>
                   </div>
-                </div>
+                </button>
                 <figcaption className="mt-3 text-center text-sm text-slate-400">{s.label}</figcaption>
               </figure>
             ))}
@@ -299,6 +301,22 @@ export default function Landing() {
         <LegalLinks className="mb-4" />
         © {new Date().getFullYear()} PropLedger. Built for funded traders.
       </footer>
+
+      {lightbox && (
+        <div
+          onClick={() => setLightbox(null)}
+          className="fixed inset-0 z-50 grid cursor-zoom-out place-items-center bg-black/85 p-4 backdrop-blur-sm sm:p-8"
+        >
+          <img src={lightbox} alt="" className="max-h-[90vh] max-w-full rounded-xl border border-white/10 shadow-2xl shadow-black/50" />
+          <button
+            type="button"
+            aria-label="Close"
+            className="absolute right-5 top-5 grid h-10 w-10 place-items-center rounded-full border border-white/15 bg-white/10 text-white transition hover:bg-white/20"
+          >
+            ✕
+          </button>
+        </div>
+      )}
     </div>
   )
 }
