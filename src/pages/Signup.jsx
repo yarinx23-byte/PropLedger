@@ -120,12 +120,9 @@ export default function Signup() {
             </button>
           </form>
 
-          <div className="my-5 flex items-center gap-3 text-xs text-slate-500">
-            <span className="h-px flex-1 bg-white/10" />
-            or
-            <span className="h-px flex-1 bg-white/10" />
+          <div className="mt-4">
+            <GoogleButton onClick={onGoogle} label="Sign up with Google" />
           </div>
-          <GoogleButton onClick={onGoogle} label="Sign up with Google" />
 
           <p className="mt-6 text-center text-sm text-slate-400">
             Already have an account?{' '}
