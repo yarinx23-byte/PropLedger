@@ -34,8 +34,31 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Top loading bar: visible feedback that the page is (re)loading. Pure CSS,
+         runs on every full page load, then fades out. -->
+    <style>
+      #page-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        width: 0;
+        background: linear-gradient(90deg, #ec4899, #7c3aed);
+        box-shadow: 0 0 10px rgba(124, 58, 237, 0.6);
+        border-radius: 0 3px 3px 0;
+        z-index: 9999;
+        animation: pl-load 0.9s ease-out forwards;
+      }
+      @keyframes pl-load {
+        0% { width: 0; opacity: 1; }
+        55% { width: 75%; opacity: 1; }
+        100% { width: 100%; opacity: 0; }
+      }
+    </style>
   </head>
   <body>
+    <div id="page-loader"></div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
