@@ -59,9 +59,9 @@ const testimonials = [
 ]
 
 const screenshots = [
-  { label: 'Dashboard - multi-account view' },
-  { label: 'Adding an expense' },
-  { label: 'Monthly report' },
+  { src: '/screenshots/dashboard.png', label: 'Every funded account in one place' },
+  { src: '/screenshots/account.png', label: 'Log payouts, fees & splits' },
+  { src: '/screenshots/expenses.png', label: 'Track expenses & your true net' },
 ]
 
 const faqs = [
@@ -217,8 +217,8 @@ export default function Landing() {
               <figure key={s.label}>
                 <div className="relative">
                   <div className="absolute -inset-3 rounded-3xl bg-linear-to-br from-brand-600/20 to-transparent blur-xl" />
-                  <div className="relative flex aspect-[16/10] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur">
-                    <span className="px-4 text-center text-sm text-slate-500">Screenshot coming soon</span>
+                  <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur">
+                    <img src={s.src} alt={s.label} loading="lazy" className="h-full w-full object-cover object-top" />
                   </div>
                 </div>
                 <figcaption className="mt-3 text-center text-sm text-slate-400">{s.label}</figcaption>
