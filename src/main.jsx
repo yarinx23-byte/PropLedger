@@ -32,3 +32,11 @@ createRoot(document.getElementById('root')).render(
     <Analytics />
   </StrictMode>,
 )
+
+// Fade out the loading splash once the app has mounted. A short minimum keeps
+// the refresh visible even when the app loads instantly.
+const splash = document.getElementById('splash')
+if (splash) {
+  setTimeout(() => splash.classList.add('hide'), 350)
+  setTimeout(() => splash.remove(), 750)
+}

@@ -35,30 +35,50 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <!-- Top loading bar: visible feedback that the page is (re)loading. Pure CSS,
-         runs on every full page load, then fades out. -->
+    <!-- Loading splash: shows on every full page (re)load, then fades out once
+         the app mounts (removed in main.jsx). Makes a refresh unmistakable. -->
     <style>
-      #page-loader {
+      #splash {
         position: fixed;
-        top: 0;
-        left: 0;
-        height: 3px;
-        width: 0;
-        background: linear-gradient(90deg, #ec4899, #7c3aed);
-        box-shadow: 0 0 10px rgba(124, 58, 237, 0.6);
-        border-radius: 0 3px 3px 0;
+        inset: 0;
         z-index: 9999;
-        animation: pl-load 0.9s ease-out forwards;
+        background: #020617;
+        display: grid;
+        place-items: center;
+        transition: opacity 0.35s ease;
       }
-      @keyframes pl-load {
-        0% { width: 0; opacity: 1; }
-        55% { width: 75%; opacity: 1; }
-        100% { width: 100%; opacity: 0; }
+      #splash.hide { opacity: 0; pointer-events: none; }
+      #splash .mark {
+        font: 800 26px Inter, Arial, sans-serif;
+        color: #fff;
+        margin-bottom: 20px;
+        letter-spacing: -0.5px;
       }
+      #splash .mark span {
+        background: linear-gradient(135deg, #ec4899, #7c3aed);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      #splash .spinner {
+        width: 42px;
+        height: 42px;
+        margin: 0 auto;
+        border-radius: 50%;
+        border: 3px solid rgba(255, 255, 255, 0.12);
+        border-top-color: #a855f7;
+        animation: pl-spin 0.7s linear infinite;
+      }
+      @keyframes pl-spin { to { transform: rotate(360deg); } }
     </style>
   </head>
   <body>
-    <div id="page-loader"></div>
+    <div id="splash">
+      <div style="text-align: center">
+        <div class="mark">Prop<span>Ledger</span></div>
+        <div class="spinner"></div>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
