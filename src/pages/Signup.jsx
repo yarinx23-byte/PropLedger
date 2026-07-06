@@ -72,31 +72,7 @@ export default function Signup() {
           <h1 className="text-2xl font-bold text-white">Create your ledger</h1>
           <p className="mt-1 text-sm text-slate-400">Track every funded account in one place.</p>
 
-          <label className="mt-6 flex items-start gap-3 text-sm text-slate-400">
-            <input
-              type="checkbox"
-              checked={agreed}
-              onChange={(e) => setAgreed(e.target.checked)}
-              className="mt-0.5 h-4 w-4 shrink-0 accent-brand-500"
-            />
-            <span>
-              I agree to the{' '}
-              <a href="/terms" target="_blank" rel="noopener noreferrer" className="font-medium text-brand-300 underline hover:text-brand-200">Terms of Service</a>{' '}
-              and{' '}
-              <a href="/privacy" target="_blank" rel="noopener noreferrer" className="font-medium text-brand-300 underline hover:text-brand-200">Privacy Policy</a>.
-            </span>
-          </label>
-
-          <div className="mt-5">
-            <GoogleButton onClick={onGoogle} label="Sign up with Google" />
-          </div>
-          <div className="my-5 flex items-center gap-3 text-xs text-slate-500">
-            <span className="h-px flex-1 bg-white/10" />
-            or
-            <span className="h-px flex-1 bg-white/10" />
-          </div>
-
-          <form onSubmit={onSubmit} className="space-y-4">
+          <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-300">Email</label>
               <input className={inputCls} type="email" name="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@trader.com" />
@@ -109,6 +85,21 @@ export default function Signup() {
               <label className="mb-1 block text-sm font-medium text-slate-300">Confirm password</label>
               <input className={inputCls} type="password" autoComplete="new-password" required value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="••••••••" />
             </div>
+
+            <label className="flex items-start gap-3 text-sm text-slate-400">
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 accent-brand-500"
+              />
+              <span>
+                I agree to the{' '}
+                <a href="/terms" target="_blank" rel="noopener noreferrer" className="font-medium text-brand-300 underline hover:text-brand-200">Terms of Service</a>{' '}
+                and{' '}
+                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="font-medium text-brand-300 underline hover:text-brand-200">Privacy Policy</a>.
+              </span>
+            </label>
 
             {err && (
               <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-300">
@@ -128,6 +119,13 @@ export default function Signup() {
               {busy ? 'Creating…' : 'Create account'}
             </button>
           </form>
+
+          <div className="my-5 flex items-center gap-3 text-xs text-slate-500">
+            <span className="h-px flex-1 bg-white/10" />
+            or
+            <span className="h-px flex-1 bg-white/10" />
+          </div>
+          <GoogleButton onClick={onGoogle} label="Sign up with Google" />
 
           <p className="mt-6 text-center text-sm text-slate-400">
             Already have an account?{' '}
