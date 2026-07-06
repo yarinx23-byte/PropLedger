@@ -46,16 +46,7 @@ export default function Login() {
           <h1 className="text-2xl font-bold text-white">Welcome back</h1>
           <p className="mt-1 text-sm text-slate-400">Log in to your PropLedger dashboard.</p>
 
-          <div className="mt-6">
-            <GoogleButton onClick={onGoogle} />
-          </div>
-          <div className="my-5 flex items-center gap-3 text-xs text-slate-500">
-            <span className="h-px flex-1 bg-white/10" />
-            or
-            <span className="h-px flex-1 bg-white/10" />
-          </div>
-
-          <form onSubmit={onSubmit} className="space-y-4">
+          <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-300">Email</label>
               <input
@@ -101,6 +92,10 @@ export default function Login() {
               {busy ? 'Signing in…' : 'Log in'}
             </button>
           </form>
+
+          <div className="mt-4">
+            <GoogleButton onClick={onGoogle} />
+          </div>
 
           <p className="mt-6 text-center text-sm text-slate-400">
             Don't have an account?{' '}
