@@ -79,7 +79,7 @@ export default function Pricing() {
               <span className="text-4xl font-bold">$99<span className="text-lg text-gray-400">/yr</span></span>
               <span className="text-lg text-gray-500 line-through">$144</span>
             </div>
-            <p className="text-emerald-400 text-sm font-medium mb-6">Save $45 - 3 months free</p>
+            <p className="text-emerald-400 text-sm font-medium mb-6">Save $45 a year</p>
             <ul className="space-y-2 text-sm text-gray-300 mb-8">
               {features.map((f) => <li key={f}>✓ {f}</li>)}
             </ul>
