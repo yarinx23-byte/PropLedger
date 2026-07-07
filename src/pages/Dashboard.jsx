@@ -708,6 +708,7 @@ function FirmAutocomplete({ value, onChange, className }) {
   return (
     <div className="relative">
       <input
+        type="text"
         className={className}
         value={value}
         onChange={(e) => { onChange(e.target.value); setOpen(true); setActive(-1) }}
