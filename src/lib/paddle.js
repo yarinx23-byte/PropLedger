@@ -24,7 +24,6 @@ export async function getPaddle() {
 }
 
 export const PRICES = {
-  earlyBird: import.meta.env.VITE_PADDLE_PRICE_EARLY_BIRD,
   monthly: import.meta.env.VITE_PADDLE_PRICE_MONTHLY,
   annual: import.meta.env.VITE_PADDLE_PRICE_ANNUAL,
 }
