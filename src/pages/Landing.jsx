@@ -164,9 +164,6 @@ export default function Landing() {
               >
                 Start tracking free
               </Link>
-              <p className="mt-4 text-xs text-slate-500">
-                From $12/mo · 7-day free trial
-              </p>
             </div>
           </div>
 
