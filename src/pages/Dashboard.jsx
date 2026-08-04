@@ -10,6 +10,7 @@ import {
   updateAccount as updateAccountDb,
   deleteAccount as deleteAccountDb,
   createExpense,
+  updateExpense as updateExpenseDb,
   deleteExpense as deleteExpenseDb,
 } from '../lib/db.js'
 
@@ -21,6 +22,7 @@ export default function Dashboard() {
   const [error, setError] = useState('')
   const [showAdd, setShowAdd] = useState(false)
   const [editing, setEditing] = useState(null)
+  const [editingExpenseId, setEditingExpenseId] = useState(null)
   const [confirmSignOut, setConfirmSignOut] = useState(false)
   const [showClosed, setShowClosed] = useState(false)
   const [expDraft, setExpDraft] = useState(() => ({ name: '', amount: '', date: todayISO(), recurring: false }))
@@ -173,27 +175,38 @@ export default function Dashboard() {
     setEditing(null)
   }
 
-  async function addExpense() {
+  // Handles both adding a new expense and saving edits to an existing one.
+  async function submitExpense() {
     const name = expDraft.name.trim()
     const amount = Number(expDraft.amount)
     if (!name || !amount) {
       setError('Enter an expense name and amount.')
       return
     }
+    const patch = { name, amount, date: expDraft.date, recurring: expDraft.recurring }
     try {
-      const row = await createExpense(user.id, {
-        name,
-        amount,
-        date: expDraft.date,
-        recurring: expDraft.recurring,
-      })
-      setExpenseRows((prev) => [...prev, row])
+      if (editingExpenseId) {
+        await updateExpenseDb(editingExpenseId, patch)
+        setExpenseRows((prev) => prev.map((e) => (e.id === editingExpenseId ? { ...e, ...patch } : e)))
+        setEditingExpenseId(null)
+      } else {
+        const row = await createExpense(user.id, patch)
+        setExpenseRows((prev) => [...prev, row])
+      }
       setError('')
-      // Keep the date for quick consecutive entries; clear the rest.
       setExpDraft((d) => ({ name: '', amount: '', date: d.date, recurring: false }))
     } catch (e) {
-      setError(e.message || 'Failed to add expense')
+      setError(e.message || 'Failed to save expense')
     }
+  }
+
+  function startEditExpense(e) {
+    setEditingExpenseId(e.id)
+    setExpDraft({ name: e.name || '', amount: String(e.amount ?? ''), date: e.date, recurring: e.recurring })
+  }
+  function cancelEditExpense() {
+    setEditingExpenseId(null)
+    setExpDraft((d) => ({ name: '', amount: '', date: d.date, recurring: false }))
   }
   async function removeExpenseRow(id) {
     const prev = expenseRows
@@ -433,13 +446,24 @@ export default function Dashboard() {
                   </span>
                   Repeat monthly
                 </button>
-                <button
-                  type="button"
-                  onClick={addExpense}
-                  className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-500"
-                >
-                  + Add expense
-                </button>
+                <div className="flex items-center gap-2">
+                  {editingExpenseId && (
+                    <button
+                      type="button"
+                      onClick={cancelEditExpense}
+                      className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/10"
+                    >
+                      Cancel
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={submitExpense}
+                    className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-500"
+                  >
+                    {editingExpenseId ? 'Save changes' : '+ Add expense'}
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -466,6 +490,16 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <span className="shrink-0 text-sm font-medium text-rose-300">-{fmtUSD(e._amount)}</span>
+                  <button
+                    onClick={() => startEditExpense(e)}
+                    aria-label="Edit expense"
+                    className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/5 text-slate-400 transition hover:border-brand-400/40 hover:bg-brand-500/10 hover:text-brand-200"
+                  >
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 20h9" />
+                      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                    </svg>
+                  </button>
                   <button
                     onClick={() => removeExpenseRow(e.id)}
                     aria-label="Delete expense"
